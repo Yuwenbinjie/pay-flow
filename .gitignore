@@ -19,3 +19,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Webpack analyze files
+stats.json
+dll-stats.json
+
+# Unit test coverage
+coverage 
