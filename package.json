@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "core-js": "^3.4.4",
-    "jad-pc": "1.3.6",
     "vue": "^2.6.10",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.1.3",
