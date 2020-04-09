@@ -141,6 +141,13 @@ export default {
     methods: {
         jestTestAdd(a, b){
             return a + b
+        },
+        asyncFunc(){
+            return new Promise(resolve =>{
+                setTimeout(() => {
+                    resolve('hello')
+                }, 2000)
+            })
         }
     },
 }

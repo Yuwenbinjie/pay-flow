@@ -20,4 +20,7 @@ describe('HelloWorld.vue', () => {
     it('jestTestAdd', () => {
         expect(vm.jestTestAdd(1,2)).toBe(3)
     })
+    it('jestTestAsync', async() => {
+        expect(await vm.asyncFunc()).toBe('hello')
+    })
 })
