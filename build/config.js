@@ -13,29 +13,38 @@ let configConst = require('./const.js')
 configConst = Object.assign(configConst,configConst[process.env.NODE_ENV])
 
 //动态插入打包好的dll包
-const dllFiles = fs.readdirSync(path.resolve(__dirname, '../dist', configConst.base, 'dll'))
 let dllPlugins = []
-dllFiles.forEach(file => {
-    if(/.*\.dll\.js/.test(file)){
-        dllPlugins.push(
-            new AddAssetHtmlPlugin({
-                // dll文件位置
-                filepath: path.resolve(__dirname,'../dist',configConst.base,'dll',file),
-                // dll 引用路径
-                publicPath: path.join('../', configConst.base, 'dll'),
-                // dll最终输出的目录
-                outputPath: path.join('../', configConst.base, 'dll'),
-            }) 
-        )
+if(process.argv.indexOf('--dll') != -1){
+    //--dll说明需要使用打包后的dll包
+    try{
+        const dllFiles = fs.readdirSync(path.resolve(__dirname, '../dist', configConst.base, 'dll'))
+        dllFiles.forEach(file => {
+            if(/.*\.dll\.js/.test(file)){
+                dllPlugins.push(
+                    new AddAssetHtmlPlugin({
+                        // dll文件位置
+                        filepath: path.resolve(__dirname,'../dist',configConst.base,'dll',file),
+                        // dll 引用路径
+                        publicPath: path.join('../', configConst.base, 'dll'),
+                        // dll最终输出的目录
+                        outputPath: path.join('../', configConst.base, 'dll'),
+                    }) 
+                )
+            }
+            if(/.*\.manifest\.json/.test(file)){
+                dllPlugins.push(
+                    new webpack.DllReferencePlugin({
+                        manifest:  require(path.resolve(__dirname, '../dist', configConst.base, 'dll', file))
+                    })
+                )
+            }
+        })
     }
-    if(/.*\.manifest\.json/.test(file)){
-        dllPlugins.push(
-            new webpack.DllReferencePlugin({
-                manifest:  require(path.resolve(__dirname, '../dist', configConst.base, 'dll', file))
-            })
-        )
+    catch(e){
+        console.error('\x1B[44m 提示: \x1B[49m', '\x1B[34m请先npm run dll\x1B[39m')
+        throw e
     }
-})
+}
 
 let conf = {
     configureWebpack: {
