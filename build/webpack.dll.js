@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const configConst = require('./const')
 
 module.exports = {
+    mode: "production",
     context: path.resolve(__dirname, '../'),
     entry: {
         vue: ['vue','vue-router','vue-resource','vuex'],

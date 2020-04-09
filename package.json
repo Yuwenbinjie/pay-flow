@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --dll",
-    "dll": "webpack --mode production --config ./build/webpack.dll.js",
+    "dll": "webpack --config ./build/webpack.dll.js",
     "build": "vue-cli-service build --no-clean --mode production --dll",
     "build:dev": "vue-cli-service build --no-clean --mode development --dll",
     "test": "vue-cli-service test:unit --config ./tests/conf/jest.config.js ./tests/unit",
@@ -57,6 +57,7 @@
     "sass-loader": "^8.0.0",
     "sha.js": "^2.4.11",
     "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "word-wrap": "^1.2.3"
   },
