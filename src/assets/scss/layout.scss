@@ -1,0 +1,174 @@
+/* 导航栏logo设置 */
+// .home-logo {
+//   display: block;
+//   background-size: 40px 28px;
+//   width: 100%;
+//   height: 100%;
+// }
+/* 面包屑导航样式 */
+.jad-breadcrumb a {
+  font-weight: 600;
+  font-size: 14px
+}
+.jad-breadcrumb:last-child a {
+  font-weight: normal;
+  color: #999
+}
+/* 布局统一样式 */
+#nav-left {
+  height: 100%;
+  padding-top: 60px;
+}
+#main {
+  padding: 60px 0px 0px 200px;
+}
+.content-box {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0 24px;
+  overflow: auto;
+}
+.panel {
+  background-color: #f8f8f8;
+  padding: 32px;
+  margin-right: 16px;
+}
+/*导航*/
+#nav-left .jad-menu {
+  min-height: 100%;
+  background: #f6f6f6;
+}
+#nav-left .jad-menu>.jad-menu-item, #nav-left .jad-menu>li>.jad-menu-sub-title {//更改一级导航栏每栏样式
+  height: 60px;
+  line-height: 60px;
+  font-weight: 700;
+  padding: 0 20px;
+  span{
+    // vertical-align: top;
+    margin-left: 8px;
+  }
+}
+.jad-menu-sub-content .jad-menu-item a {//导航跳转字体默认为黑色
+  color: #000;
+}
+.jad-menu-sub-content .jad-menu-sub-title, .jad-menu-sub-content .jad-menu-sub-title>a {//二级导航标题灰色
+  color: #666;
+}
+#nav-left .jad-menu-sub-content .jad-menu-sub-title {//二级导航栏标题高度降低，间距变大
+  height: 50px;
+  line-height: 50px;
+  font-weight: 700;
+  padding-left: 30px!important;
+}
+#nav-left .jad-menu-item:hover, #nav-left .jad-menu-sub-title:hover {//更改hover效果
+  background: #fff;
+}
+#nav-left .jad-menu>li .jad-menu-sub-title, #nav-left .jad-menu>.jad-menu-item,
+#nav-left .jad-menu-sub-opened .jad-menu-sub-title, .jad-menu-sub-opened .jad-menu-sub-content {//导航栏增加边框
+  border-bottom: 1px solid #ddd;
+}
+.jad-menu-sub-active>.jad-menu-sub-title, .jad-menu-item-active>a {//定义当前点击样式
+  color: #2d8cf0!important;
+  background: #fff;
+}
+.jad-menu-item-active, .jad-menu-sub-content {
+  background: #fff;
+}
+#nav-left .jad-menu-sub-icon {//箭头向右
+  float: right;
+}
+/*多选框垂直居中*/
+// .jad-checkbox-wrapper {vertical-align: middle;}
+/*分页*/
+// .jad-pagination { float: right; }
+
+/*表格*/
+// .jad-table th, .jad-table td {
+//   padding: 16px 12px;
+// }
+// .jad-table td {
+//   font-size: 14px;
+//   color: #111;
+// }
+// .jad-table th {
+//   font-size: 14px;
+//   color: #999;
+// }
+// .jad-table .jad-table-content tr {
+//   .hoverIcon {
+//     transition: all .5s;
+//     opacity: 0;
+//   }
+//   &:hover {
+//     .hoverIcon {
+//       opacity: 1;
+//     }
+//   }
+// }
+
+/* 登陆校验蒙版样式 */
+#splash {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #03a9f4;
+  z-index: 99999;
+}
+.spinner {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  margin: 0 auto;
+  top: 40%;
+}
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #eee;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  }
+  50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+#authTip {
+  color: #eee;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+
+// @font-face{
+//   font-family: 'jd';
+//   src:url('../fonts/jd.eot?9omqs');
+//   src:url('../fonts/jd.eot?#iefix9omqs') format('embedded-opentype'),url('../fonts/jd.woff?9omqs') format('woff'),url('../fonts/jd.ttf?9omqs') format('truetype'),url('../fonts/jd.svg?9omqs#jd') format('svg');
+//   font-weight: normal;
+//   font-style: normal;
+// }
+

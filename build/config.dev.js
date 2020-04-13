@@ -15,7 +15,8 @@ module.exports = {
                 secure: false,
                 changeOrigin: true,
             },
-            '/brand/*': {
+            '/brand/admin': {
+                // target: 'http://admin.jzt-api.jd.com',
                 target: 'http://pts-api.jd.com/mock/5cad5fa09814c918a15133c3',
                 secure: false,
                 changeOrigin: true,

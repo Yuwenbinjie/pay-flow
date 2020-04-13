@@ -2,9 +2,9 @@ const path = require('path')
 
 module.exports = {
     //项目路径
-    base: 'management',
+    base: 'checkSystem',
     //项目名称
-    title: 'vue-cli4-frame',
+    title: 'checkSystem-ui',
     //不同环境下配置
     development: {
         erpLoginUrl: '//test.ssa.jd.com',

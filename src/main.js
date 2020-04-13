@@ -1,14 +1,18 @@
 import '@/assets/scss/reset.scss'
 import '@/assets/scss/common.scss'
+import '@/assets/scss/layout.scss'
 
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import router from './router'
+import JadPc from 'jad-pc'
+import 'jad-pc/dist/jad.css'
 import store from './store'
 import App from './App.vue'
 import $post from './utils/$post'
 
 Vue.use(VueResource)
+Vue.use(JadPc)
 
 Vue.prototype.$post = $post
 Vue.config.productionTip = false

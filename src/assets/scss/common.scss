@@ -79,7 +79,7 @@
 .px36,.pl36{padding-left:36px!important}
 .px40,.pl40{padding-left:40px!important}
 .px48,.pl48{padding-left:48px!important}
-.px64,.pl64{padding-left:64px!important}
+.px60,.pl60{padding-left:60px!important}
 
 /*padding-right*/
 .px8,.pr8{padding-right:8px!important}
@@ -91,7 +91,7 @@
 .px36,.pr36{padding-right:36px!important}
 .px40,.pr40{padding-right:40px!important}
 .px48,.pr48{padding-right:48px!important}
-.px64,.pr64{padding-right:64px!important}
+.px60,.pr60{padding-right:60px!important}
 
 /*padding-top*/
 .py5 .pt5{padding-top:5px!important}
@@ -104,7 +104,7 @@
 .py36,.pt36{padding-top:36px!important}
 .py40,.pt40{padding-top:40px!important}
 .py48,.pt48{padding-top:48px!important}
-.py64,.pt64{padding-top:64px!important}
+.py60,.pt60{padding-top:60px!important}
 
 /*padding-bottom*/
 .py8,.pb8{padding-bottom:8px!important}
@@ -117,7 +117,7 @@
 .py36,.pb36{padding-bottom:36px!important}
 .py40,.pb40{padding-bottom:40px!important}
 .py48,.pb48{padding-bottom:48px!important}
-.py64,.pb64{padding-bottom:64px!important}
+.py60,.pb60{padding-bottom:60px!important}
 
 /*margin*/
 .m8{margin:8px!important}
@@ -232,9 +232,9 @@
 
 /*form*/
 .blue-button{background-color:#016ee8; color:#fff}
-.form1-inline{margin-bottom:24px;}
-.form1-title{color:#111;display:inline-block;text-align:right;width:100px;font-weight: bold;line-height: 30px;}
-.form1-value{color:#111;display:inline-block;margin-left:24px;vertical-align:top;width: 400px;}
+.form-inline{margin-bottom:24px;}
+.form-title{color:#666;display:inline-block;text-align:right;width:100px;}
+.form-value{color:#111;display:inline-block;margin-left:32px;vertical-align:middle;}
 
 /* operator color */
 .operator{
