@@ -76,8 +76,5 @@ export const validOptions = [
     }, {
         label: '无效',
         value: 1,
-    }, {
-        label: '其他',
-        value: 2,
     }
 ]

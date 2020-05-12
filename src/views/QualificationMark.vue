@@ -7,9 +7,6 @@
             alt="Vue logo"
             src="../assets/imgs/logo.png"
         >
-        <j-button @click="showOptModal">
-            打开modal
-        </j-button>
         <HelloWorld msg="Welcome to Your Vue.js App" />
         <opt-modal
             :show-opt-modal="isShowOptModal"
