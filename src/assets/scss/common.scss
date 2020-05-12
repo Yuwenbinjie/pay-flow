@@ -209,6 +209,7 @@
 .w650{width:650px!important}
 .w1042{width:1042px!important}
 .minW1000{min-width:1000px!important}
+.minW1100{min-width:1100px!important}
 .minW1200{min-width:1200px!important}
 .minW1500{min-width:1500px!important}
 .minW1640{min-width:1640px!important}
@@ -231,6 +232,11 @@
 /* title */
 .title-lv1{font-size: 24px;font-weight: 700;color: #333;padding: 24px 0;}
 .title-lv2{font-size: 18px;font-weight: 700;color: #333;padding-bottom: 16px;}
+
+/* filter */
+.filter-inline{display:inline-block;margin-bottom:16px;margin-right:24px;}
+.filter-title{display:inline-block;margin-right:16px;text-align:right;width:80px;}
+.filter-value{display:inline-block;vertical-align:middle;width:200px;}
 
 /*form*/
 .blue-button{background-color:#016ee8; color:#fff}

@@ -1,20 +1,8 @@
 import Vue from 'vue'
 import _ from 'lodash'
 /* global $apiUrl */
-let url = $apiUrl + ''
+let url = $apiUrl
 Vue.prototype.$onlyNotify = true
-
-// eslint-disable-next-line require-jsdoc
-function handlerLogin(res){
-    let defaultRes = {body: {code: 0}};
-    let {body} = res || defaultRes;
-    if (body.code === -100) {//-100未登录
-        window.location.href = body.data
-    }
-    if (res && res.status === 401){
-        window.location.href = body.data
-    }
-}
 
 export default async (params, args) => {
     try {
@@ -47,9 +35,23 @@ export default async (params, args) => {
         return false
     }
 }
+// eslint-disable-next-line require-jsdoc
+function handlerLogin(res){//分情况处理code码
+    let defaultRes = {body: {code: 0}};
+    let {body} = res || defaultRes;
+    if (body.code === -100) {//-100未登录
+        setTimeout(() => {
+            // eslint-disable-next-line
+            window.location.href = $erpLoginUrl + `/sso/login?ReturnUrl=http://${location.host}/checkSystem`
+        }, 1000)
+    }
+    if (body.code === -200){//-200没权限
+        window.location.href = 'http://admin.x.jd.com/static/cannotenter.html'
+    }
+}
 
 // eslint-disable-next-line require-jsdoc
-function errorMessageProcess(res){
+function errorMessageProcess(res){//错误信息提示
     let errorMsg = '请求异常，请重新尝试'
     if (res.errors && res.errors.length === 1){
         errorMsg = res.errors[0].subMsg

@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "core-js": "^3.4.4",
-    "jad-pc": "^1.4.3",
+    "jad-pc": "^1.4.9",
+    "jad-pc-pro": "^0.4.4",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",

@@ -77,13 +77,9 @@ export default {
         async getAuth() {//获取权限信息
             let res = await this.$post('/brand/admin/client/login')
             if (res) {
-                this.pin = res.erp
                 this.showTip('数据加载中，请稍后...')
                 this.closeSplash()
-                if (!res.entry) {
-                    location.href = 'http://admin.nfa.jd.com/static/cannotenter.html'
-                }
-                sessionStorage.setItem('erp', res.erp)
+                // sessionStorage.setItem('erp', res)
             } else {
                 this.showTip('用户信息认证失败...')
                 setTimeout(() => {
@@ -92,10 +88,10 @@ export default {
                 }, 1000)
             }
         },
-        showTip(info) {
+        showTip(info) {//loading蒙版提示
             $('#authTip').text(info)
         },
-        closeSplash() {
+        closeSplash() {//关闭loading蒙版
             setTimeout(() => {
                 $('#splash').fadeOut()
             }, 1000)

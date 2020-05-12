@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import QualificationMark from '../views/QualificationMark.vue'
-import QualificationLook from '../views/QualificationLook.vue'
+// import QualificationLook from '../views/QualificationLook.vue'
 
 Vue.use(VueRouter)
 
@@ -27,7 +27,7 @@ const routes = [
         path: '/qualificationLook',
         name: 'QualificationLook',
         display: '资质查看',
-        component: QualificationLook,
+        component: QualificationMark,
     },
 ]
 

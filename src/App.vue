@@ -12,7 +12,10 @@
             <j-content id="main">
                 <div class="content-box">
                     <ui-bread-crumb />
-                    <router-view class="minW1000" />
+                    <router-view
+                        :key="$route.path"
+                        class="minW1100"
+                    />
                 </div>
             </j-content>
         </j-layout>

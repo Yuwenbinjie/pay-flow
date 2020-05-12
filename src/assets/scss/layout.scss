@@ -30,8 +30,8 @@
 }
 .panel {
   background-color: #f8f8f8;
-  padding: 32px;
-  margin-right: 16px;
+  color: #333;
+  padding: 32px 32px 16px 32px;
 }
 /*导航*/
 #nav-left .jad-menu {
@@ -79,8 +79,12 @@
 }
 /*多选框垂直居中*/
 // .jad-checkbox-wrapper {vertical-align: middle;}
+
 /*分页*/
-// .jad-pagination { float: right; }
+.jad-pagination { float: right; }
+
+/*自定义列:设置固定宽度，防止浮动影响样式*/
+.jad-pro-custom-columns-popper{width: 640px;}
 
 /*表格*/
 // .jad-table th, .jad-table td {
@@ -164,6 +168,41 @@
 }
 
 
+/*图片预览样式*/
+.img-wraper {
+  position: relative;
+  display: block;
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  img {
+      max-width: 100%;
+      max-height: 100%;
+      vertical-align: middle !important;
+  }
+}
+.img-wraper-tooltip {
+  position: relative;
+  display: block;
+  max-width: 500px;
+  max-height: 500px;
+  text-align: center;
+  img {
+      max-width: 500px;
+      max-height: 500px;
+      vertical-align: middle !important;
+  }
+  .mask-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      max-width: 500px;
+      max-height: 500px;
+      vertical-align: middle !important;
+  }
+}
+
 // @font-face{
 //   font-family: 'jd';
 //   src:url('../fonts/jd.eot?9omqs');
@@ -172,3 +211,11 @@
 //   font-style: normal;
 // }
 
+
+/*滑动固定列*/
+.scroll-top{
+  position: relative;
+  z-index: 100;
+  background: #f8f8f8;
+  padding: 5px 0 16px 0;
+}
