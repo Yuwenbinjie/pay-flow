@@ -64,7 +64,7 @@
                     slot-scope="props"
                 >
                     <j-tooltip
-                        v-for="(item,index) in props.row.packageList"
+                        v-for="(item,index) in props.row.reducedQualifications"
                         :key="index"
                         style="margin:2px 10px 2px 0px;"
                         placement="right"
@@ -77,10 +77,6 @@
                             class="img-wraper-tooltip"
                         >
                             <img :src="item.imgUrl">
-                            <!-- <img
-                                v-if="rowForModal.maskUrl"
-                                :src="item.width == 1062 ? gifMask : rowForModal.maskUrl"
-                                :class="[rowForModal.groupType == '1' ? 'mask-img down-img' : 'mask-img']"> -->
                         </div>
                     </j-tooltip>
                 </template>
@@ -89,7 +85,7 @@
                     slot-scope="props"
                 >
                     <div
-                        v-for="(item, index) in props.row.packageList"
+                        v-for="(item, index) in props.row.reducedQualifications"
                         :key="index"
                     >
                         {{ item.title }}
@@ -106,7 +102,11 @@
                     slot="validTime"
                     slot-scope="props"
                 >
-                    {{ props.row.markStartTime }}~{{ props.row.markEndTime }}
+                    <span v-if="props.row.validTimeStart">
+                        {{ props.row.validTimeStart }}~{{ props.row.validTimeEnd }}
+                    </span>
+                    <span v-else-if="props.row.markStatus == 3">--</span>
+                    <span v-else />
                 </template>
                 <template
                     slot="markInfo"
@@ -116,7 +116,7 @@
                         <div class="markInfoTitle">
                             资质ID：
                         </div>
-                        <span class="markInfoValue">{{ renderId(props.row.packageList) }}</span>
+                        <span class="markInfoValue">{{ renderId(props.row.reducedQualifications) }}</span>
                     </div>
                     <div>
                         <div class="markInfoTitle">
@@ -139,28 +139,33 @@
                         v-if="props.row.markStatus==2"
                         type="primary"
                         class="mb8 w90"
-                        @click="pack"
+                        @click="mark(props.row)"
                     >
                         标注
                     </j-button>
                     <j-button
-                        v-if="props.row.markStatus==3||props.row.markStatus==4"
+                        v-if="props.row.markStatus==3"
                         type="primary"
                         class="mb8 w90"
-                        @click="pack"
+                        @click="mark(props.row)"
                     >
                         编辑
                     </j-button>
                     <j-button
                         type="primary"
                         is-outline
-                        v-if="props.row.packageList.length > 1"
+                        v-if="props.row.reducedQualifications.length > 1"
                         @click="unPack(props.row.packageId)"
                     >
                         取消打包
                     </j-button>
                 </template>
             </j-table>
+            <opt-modal
+                :show-opt-modal="showOptModal"
+                :row-obj="checkedRows[0]"
+                @close-opt="closeOptModal"
+            />
         </div>
     </div>
 </template>
@@ -171,16 +176,19 @@ import scroll from '@/utils/scroll.js'
 import addColor from '@/utils/addColor.js'
 import {columns, customData, defaultCheck, isValidOpt} from '@/components/constant/qualification.js'
 import FilterPanel from '@/components/qualification/FilterPanel.vue'
+import OptModal from '@/components/qualification/OptModal.vue'
 
 export default {
     name: 'QualificationMark',
     components: {
-        FilterPanel
+        FilterPanel,
+        OptModal
     },
     filters: {
         filterIsValidText(val) {
-            let obj = _.filter(isValidOpt, {value: val})
-            return obj[0].label
+            let text = val ? _.filter(isValidOpt, {value: val})[0].label : ''
+            return text
+
         },
     },
     data() {
@@ -215,7 +223,7 @@ export default {
             rowSelection: {
                 type: 'checkbox',
                 getCheckboxProps: {
-                    disabled: row => {return row.packageList.length > 1}
+                    disabled: row => {return row.reducedQualifications.length > 1}
                 },
                 onSelect: (checked, choosableCheckedRows) => {
                     // this.checkedId = _.map(choosableCheckedRows, 'packageId')
@@ -225,8 +233,9 @@ export default {
                     this.checkedRows = choosableCheckedRows
                 }
             },
-            checkedRows: [],
-            isMarkPage: true,
+            checkedRows: [], //已选行
+            isMarkPage: true, //区分标注和查看页面
+            showOptModal: false, //标注/编辑侧滑框开关
         }
     },
     computed: {
@@ -262,7 +271,7 @@ export default {
         async ajaxQuery(){//post请求列表数据
             let res = await this.$post('/qualification/getQualification', this.params)
             if (res){
-                this.data = res.data
+                this.data = res.packageList
                 this.unmarked = res.unmarked
                 this.total = res.total
                 if (this.params.sortField){
@@ -270,12 +279,20 @@ export default {
                 }
             }
         },
-        async sortChange(order, key){//按pin排序
+        sortChange(order, key){//按pin排序
             this.params.sortField = key
             this.params.sortOrder = order == 'asc' ? 0 : 1//0是升序 1是降序
-            await this.ajaxQuery()
+            this.ajaxQuery()
         },
-        async pack(){
+        mark(row) {//打开 标注/编辑 组件
+            this.showOptModal = true
+            this.checkedRows = [row]
+        },
+        closeOptModal(){//关闭 标注/编辑 组件
+            this.showOptModal = false
+            this.ajaxQuery()
+        },
+        async pack(){//打包
             let newArr = _.uniqBy(this.checkedRows, 'pin')
             if (newArr.length > 1){
                 this.$Notification({
@@ -286,7 +303,7 @@ export default {
             }
             let checkedId = _.map(this.checkedRows, 'packageId')
             if (checkedId.length > 1) {
-                let res = await this.$post('/qualification/packageQualification', {idList: checkedId})
+                let res = await this.$post('/qualification/packQualification', {qualificationIdList: checkedId})
                 if (res){
                     this.ajaxQuery()
                 }
@@ -302,13 +319,13 @@ export default {
                 })
             }
         },
-        async unPack(id){
+        async unPack(id){//取消打包
             let that = this
             this.$Modal.confirm({
                 title: '操作确认',
                 content: '您确认要取消打包吗?',
                 async onOk() {
-                    let res = await that.$post('/qualification/unpackage', {packageId: id})
+                    let res = await that.$post('/qualification/unpackQualification', {packageId: id})
                     if (res){
                         that.ajaxQuery()
                     }

@@ -17,8 +17,8 @@ export const columns = [
         title: '资质类型',
         width: 130,
         render: (val)=>{
-            let obj = _.filter(qualificationTypeOpt, {value: val})
-            return obj[0].label
+            let text = val ? _.filter(qualificationTypeOpt, {value: val})[0].label : ''
+            return text
         }
     },
     {
@@ -30,25 +30,42 @@ export const columns = [
         key: 'brandName',
         title: '品牌商品名',
         width: 120,
+        render: (val, row)=>{
+            if (row.markStatus == 3 && !val){
+                return '--'
+            } else {
+                return val
+            }
+        }
     },
     {
         key: 'remark',
         title: '备注文案',
         width: 120,
+        render: (val, row)=>{
+            if (row.markStatus == 3 && !val){
+                return '--'
+            } else {
+                return val
+            }
+        }
     },
     {
         key: 'isValid',
         title: '是否有效',
         width: 120,
-        // render: (val)=>{
-        //     let obj = _.filter(isValidOpt, {value: val})
-        //     return obj[0].label
-        // }
     },
     {
         key: 'invalidReason',
         title: '无效原因',
         width: 120,
+        render: (val, row)=>{
+            if (row.markStatus == 3 && !val){
+                return '--'
+            } else {
+                return val
+            }
+        }
     },
     {
         key: 'pin',
@@ -116,74 +133,90 @@ export const defaultCheck = children.map(o=>{
 export const qualificationTypeOpt = [//资质类型
     {
         value: 1,
-        label: '模特/手绘免责声明',
+        label: '模特免责声明',
     },
     {
         value: 2,
-        label: '首发证明',
+        label: '商图免责声明',
     },
     {
         value: 3,
-        label: '专利',
+        label: '肖像授权',
     },
     {
         value: 4,
-        label: '明星肖像授权',
+        label: '影视剧作授权',
     },
     {
         value: 5,
-        label: '品牌授权',
+        label: '游戏授权',
     },
     {
         value: 6,
-        label: '广告审查表',
+        label: '首发证明',
     },
     {
         value: 7,
-        label: '特殊化妆品行政许可批件',
+        label: '官方授权证明',
     },
     {
         value: 8,
-        label: '质检报告',
+        label: '京东合作授权',
     },
     {
         value: 9,
-        label: '营业执照',
-    },
-    {
-        value: 10,
-        label: '进口报关单',
-    },
-    {
-        value: 11,
-        label: '出口报关单',
-    },
-    {
-        value: 12,
-        label: '数据认证报告',
-    },
-    {
-        value: 13,
-        label: '首发承诺函',
-    },
-    {
-        value: 14,
         label: '活动立项证明',
     },
     {
+        value: 10,
+        label: '广告审查表',
+    },
+    {
+        value: 11,
+        label: '特殊化妆品行政许可批件',
+    },
+    {
+        value: 12,
+        label: '奖项证明',
+    },
+    {
+        value: 13,
+        label: '检验报告',
+    },
+    {
+        value: 14,
+        label: '专利证明',
+    },
+    {
         value: 15,
-        label: '中华老字号',
+        label: '3C认证',
     },
     {
         value: 16,
-        label: '非物质文化遗产',
+        label: '进口报关单',
     },
     {
         value: 17,
-        label: '央行批准文件',
+        label: '出口报关单',
+    },
+    {
+        value: 18,
+        label: '营业执照',
+    },
+    {
+        value: 19,
+        label: '资格授权证明',
+    },
+    {
+        value: 20,
+        label: '数据证明',
+    },
+    {
+        value: 21,
+        label: '其它文件',
     },
 ]
-export const isValidOpt = [//是否有效
+export const isValidOpt = [//筛选：是否有效
     {
         value: 2,
         label: '有效',
@@ -194,11 +227,18 @@ export const isValidOpt = [//是否有效
     },
     {
         value: 4,
-        label: '其他',
+        label: '过期',
+    },
+]
+
+export const markValidOpt = [//标注：是否有效
+    {
+        value: 2,
+        label: '有效',
     },
     {
-        value: 5,
-        label: '过期',
+        value: -2,
+        label: '无效',
     },
 ]
 

@@ -20,6 +20,7 @@
                     <span>资质审核</span>
                 </template>
                 <j-menu-item
+                    v-if="isAuth(1)"
                     item-key="qualificationMark"
                 >
                     <router-link to="/qualificationMark">
@@ -27,6 +28,7 @@
                     </router-link>
                 </j-menu-item>
                 <j-menu-item
+                    v-if="isAuth(0)"
                     item-key="qualificationLook"
                 >
                     <router-link to="/qualificationLook">
@@ -47,9 +49,7 @@ export default {
             width: 200,
             activeKey: 'home',
             openKeys: [],
-            authObj: {
-                brandMenuPrivilege: [],
-            },
+            authList: [], //菜单权限码
             //keys格式遵循父标签嵌套子标签，只支持两层
             keys: [
                 'home',
@@ -74,9 +74,14 @@ export default {
         this.getAuth()
     },
     methods: {
+        isAuth(code) {
+            return this.authList.includes(code)
+        },
         async getAuth() {//获取权限信息
-            let res = await this.$post('/brand/admin/client/login')
+            let res = await this.$post('/qualification/authList')
             if (res) {
+                // console.log(res)
+                this.authList = res
                 this.showTip('数据加载中，请稍后...')
                 this.closeSplash()
                 // sessionStorage.setItem('erp', res)

@@ -6,12 +6,16 @@ module.exports = {
     //项目名称
     title: 'checkSystem-ui',
     //不同环境下配置
-    development: {
+    development: {//本地开发环境
         erpLoginUrl: '//test.ssa.jd.com',
         apiUrl: ''
     },
-    production: {
+    test: {//测试环境
+        erpLoginUrl: '//test.ssa.jd.com',
+        apiUrl: '//admin.deal-api.jd.com'
+    },
+    production: {//预发和线上环境
         erpLoginUrl: '//ssa.jd.com',
-        apiUrl: ''
+        apiUrl: '//admin.deal-api.jd.com'
     }
 }

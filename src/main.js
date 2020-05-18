@@ -1,6 +1,7 @@
 import '@/assets/scss/reset.scss'
 import '@/assets/scss/common.scss'
 import '@/assets/scss/layout.scss'
+import '@/assets/scss/font.scss'
 
 import Vue from 'vue'
 import VueResource from 'vue-resource'
