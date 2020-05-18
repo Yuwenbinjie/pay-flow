@@ -5,8 +5,8 @@
   "scripts": {
     "start": "vue-cli-service serve --dll --type development",
     "dll": "webpack --config ./build/webpack.dll.js",
-    "build": "vue-cli-service build --no-clean --mode production --dll --type production",
-    "build:test": "vue-cli-service build --no-clean --mode production --dll --type test",
+    "build": "npm run dll && vue-cli-service build --no-clean --mode production --dll --type production",
+    "build:test": "npm run dll && vue-cli-service build --no-clean --mode production --dll --type test",
     "test": "vue-cli-service test:unit --config ./tests/conf/jest.config.js ./tests/unit",
     "commit": "npm run lint && git-cz",
     "lint": "npm run lint:src && npm run lint:test",
