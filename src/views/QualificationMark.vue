@@ -154,7 +154,7 @@
                     <j-button
                         type="primary"
                         is-outline
-                        v-if="props.row.reducedQualifications.length > 1"
+                        v-if="props.row.reducedQualifications.length > 1 || !props.row.intact"
                         @click="unPack(props.row.packageId)"
                     >
                         取消打包
@@ -223,7 +223,7 @@ export default {
             rowSelection: {
                 type: 'checkbox',
                 getCheckboxProps: {
-                    disabled: row => {return row.reducedQualifications.length > 1}
+                    disabled: row => {return row.reducedQualifications.length > 1 || !row.intact}
                 },
                 onSelect: (checked, choosableCheckedRows) => {
                     // this.checkedId = _.map(choosableCheckedRows, 'packageId')
