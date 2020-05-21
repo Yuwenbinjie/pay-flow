@@ -20,7 +20,7 @@
                     <span>资质审核</span>
                 </template>
                 <j-menu-item
-                    v-if="isAuth(1)"
+                    v-show="isAuth(1)"
                     item-key="qualificationMark"
                 >
                     <router-link to="/qualificationMark">
@@ -28,7 +28,7 @@
                     </router-link>
                 </j-menu-item>
                 <j-menu-item
-                    v-if="isAuth(0)"
+                    v-show="isAuth(0)"
                     item-key="qualificationLook"
                 >
                     <router-link to="/qualificationLook">

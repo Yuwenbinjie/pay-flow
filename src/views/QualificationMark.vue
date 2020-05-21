@@ -359,7 +359,7 @@ export default {
 }
 .markInfoValue{
     display: inline-block;
-    width: 140px;
+    width: 155px;
     vertical-align: top;
 }
 </style>

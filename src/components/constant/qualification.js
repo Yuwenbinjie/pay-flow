@@ -9,13 +9,13 @@ export const columns = [
     {
         key: 'title',
         title: '资质标题',
-        width: 120,
+        width: 180,
         display: true,
     },
     {
         key: 'type',
         title: '资质类型',
-        width: 130,
+        width: 120,
         render: (val)=>{
             let text = val ? _.filter(qualificationTypeOpt, {value: val})[0].label : ''
             return text
@@ -24,12 +24,12 @@ export const columns = [
     {
         key: 'validTime',
         title: '有效时间',
-        width: 120,
+        width: 180,
     },
     {
         key: 'brandName',
         title: '品牌商品名',
-        width: 120,
+        width: 130,
         render: (val, row)=>{
             if (row.markStatus == 3 && !val){
                 return '--'
@@ -41,7 +41,7 @@ export const columns = [
     {
         key: 'remark',
         title: '备注文案',
-        width: 120,
+        width: 130,
         render: (val, row)=>{
             if (row.markStatus == 3 && !val){
                 return '--'
@@ -58,7 +58,7 @@ export const columns = [
     {
         key: 'invalidReason',
         title: '无效原因',
-        width: 120,
+        width: 130,
         render: (val, row)=>{
             if (row.markStatus == 3 && !val){
                 return '--'
@@ -70,7 +70,7 @@ export const columns = [
     {
         key: 'pin',
         title: '用户pin',
-        width: 120,
+        width: 130,
         display: true,
         sort: {
             enable: true,
@@ -80,13 +80,13 @@ export const columns = [
     {
         key: 'createTime',
         title: '创建时间',
-        width: 120,
+        width: 170,
         display: true,
     },
     {
         key: 'markInfo',
         title: '资质信息',
-        width: 240,
+        width: 250,
         display: true,
     },
     {
