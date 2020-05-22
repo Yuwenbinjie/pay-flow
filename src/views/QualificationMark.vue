@@ -3,7 +3,7 @@
         <p class="title-lv1">
             {{ pageTitle }}
         </p>
-        <div class="panel">
+        <div class="panel pb16">
             <filter-panel
                 :param-obj="params"
                 :is-mark-page="isMarkPage"
@@ -12,7 +12,7 @@
         </div>
         <div
             v-if="isMarkPage"
-            class="panel mt16 pt16"
+            class="panel mt16 py16"
         >
             <div>待标注素材：{{ unmarked }}</div>
         </div>
