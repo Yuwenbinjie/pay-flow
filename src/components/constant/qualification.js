@@ -249,10 +249,10 @@ export const markStatusOpt = [//标注状态
     },
     {
         value: 2,
-        label: '待标记',
+        label: '待标注',
     },
     {
         value: 3,
-        label: '已标记',
+        label: '已标注',
     },
 ]
