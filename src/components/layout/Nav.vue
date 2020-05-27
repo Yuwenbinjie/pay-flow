@@ -14,9 +14,10 @@
                     </div>
                 </router-link>
             </j-menu-item>
-            <j-submenu 
+            <j-submenu
                 v-show="isAuth(1) || isAuth(0)"
-                item-key="qualification">
+                item-key="qualification"
+            >
                 <template slot="title">
                     <j-icon type="audit" />
                     <span>资质审核</span>
