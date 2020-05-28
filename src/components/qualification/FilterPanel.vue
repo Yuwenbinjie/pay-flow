@@ -103,7 +103,7 @@
                 </span>
             </j-select>
         </div>
-        <div class="filter-inline">
+        <!-- <div class="filter-inline">
             <div class="filter-title">
                 资质标题
             </div>
@@ -112,7 +112,7 @@
                 v-model="paramObj.title"
                 placeholder="请输入资质标题"
             />
-        </div>
+        </div> -->
         <div class="filter-inline">
             <div class="filter-title">
                 标注状态
