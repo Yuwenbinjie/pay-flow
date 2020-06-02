@@ -57,6 +57,7 @@
                 class="qualificationTable"
                 :custom-threshold="114"
                 @on-sort-remote-change="sortChange"
+                :default-checked-keys="checkedId"
                 :data="data"
             >
                 <template
@@ -239,6 +240,9 @@ export default {
         }
     },
     computed: {
+        checkedId() {
+            return _.map(this.checkedRows, 'packageId')
+        }
     },
     mounted() {
         scroll('.scroll-top', 60)//引入滑动固定元素方法
@@ -278,6 +282,7 @@ export default {
                 if (this.params.sortField){
                     setTimeout(addColor.bind(this, '.qualificationTable', this.data, 'pin'), 100)//获取排序后的数据进行着色
                 }
+                this.checkedRows = []//每次请求刷新已选行
             }
         },
         sortChange(order, key){//按pin排序
@@ -302,13 +307,12 @@ export default {
                 })
                 return
             }
-            let checkedId = _.map(this.checkedRows, 'packageId')
-            if (checkedId.length > 1) {
-                let res = await this.$post('/qualification/packQualification', {qualificationIdList: checkedId})
+            if (this.checkedId.length > 1) {
+                let res = await this.$post('/qualification/packQualification', {qualificationIdList: this.checkedId})
                 if (res){
                     this.ajaxQuery()
                 }
-            } else if (checkedId.length == 1) {
+            } else if (this.checkedId.length == 1) {
                 this.$Notification({
                     message: '单个素材不能打包！',
                     type: 'warn',
