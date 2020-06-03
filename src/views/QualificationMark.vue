@@ -255,7 +255,6 @@ export default {
             this.params.pin = this.$route.query.pin || ''
             this.params.pageSize = 100
             this.params.markStatus = 1
-            this.params.isValid = [2]
             this.columns = _.filter(columns, (item)=>{//filter返回一个新数组，不会改变columns数组
                 return item.key != 'operation'
             })
