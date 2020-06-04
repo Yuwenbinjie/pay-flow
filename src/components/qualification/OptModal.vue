@@ -83,6 +83,7 @@
                     class="vt inline-block w400"
                     type="textarea"
                     is-autosize
+                    :is-disabled="params.markValid==2"
                     :rows="{min: 5}"
                     v-model.trim="params.invalidReason"
                 />
@@ -196,6 +197,7 @@ export default {
         'params.markValid': {
             handler(val) {
                 val == 2 ? this.invalidError = false : ''
+                this.params.invalidReason = ''
             },
             deep: true,
         }
