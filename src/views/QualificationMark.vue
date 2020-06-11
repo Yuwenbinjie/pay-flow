@@ -273,7 +273,7 @@ export default {
             this.ajaxQuery()
         },
         async ajaxQuery(){//post请求列表数据
-            let res = await this.$post('/qualification/getQualification', this.params)
+            let res = await this.$post('/material/qualification/getQualification', this.params)
             if (res){
                 this.data = res.packageList
                 this.unmarked = res.unmarked
@@ -307,7 +307,10 @@ export default {
                 return
             }
             if (this.checkedId.length > 1) {
-                let res = await this.$post('/qualification/packQualification', {qualificationIdList: this.checkedId})
+                let res = await this.$post(
+                    '/material/qualification/packQualification',
+                    {qualificationIdList: this.checkedId}
+                )
                 if (res){
                     this.ajaxQuery()
                 }
@@ -329,7 +332,7 @@ export default {
                 title: '操作确认',
                 content: '您确认要取消打包吗?',
                 async onOk() {
-                    let res = await that.$post('/qualification/unpackQualification', {packageId: id})
+                    let res = await that.$post('/material/qualification/unpackQualification', {packageId: id})
                     if (res){
                         that.ajaxQuery()
                     }

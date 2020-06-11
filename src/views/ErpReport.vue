@@ -6,24 +6,14 @@
         <div class="panel pb16">
             <div class="filter-inline">
                 <div class="filter-title">
-                    审核人员
-                </div>
-                <j-input
-                    class="w200"
-                    v-model="params.pin"
-                    placeholder="可输入多个ERP，用','分隔"
-                />
-            </div>
-            <div class="filter-inline">
-                <div class="filter-title">
                     审核时间
                 </div>
                 <j-date-picker
                     class="w200 inline-block"
                     type="daterange"
+                    :value="[params.startReportDate, params.endReportDate]"
                     :options="{rangeLimit:92}"
                     :is-linked="false"
-                    is-show-clear
                     @on-change="changeReportDate"
                 />
             </div>
@@ -47,6 +37,16 @@
                         已选择{{ selectVal.length }}个类型
                     </span>
                 </j-select>
+            </div>
+            <div class="filter-inline">
+                <div class="filter-title">
+                    审核人员
+                </div>
+                <j-input
+                    class="w200"
+                    v-model="params.erp"
+                    placeholder="可输入多个ERP，用','分隔"
+                />
             </div>
             <div class="filter-inline">
                 <div class="filter-title">
@@ -109,6 +109,7 @@
 
 <script>
 import _ from 'lodash'
+import moment from 'moment'
 import {columns} from '@/components/constant/erpReport.js'
 
 export default {
@@ -120,8 +121,8 @@ export default {
             queryTypeOpt: [],
             params: {
                 erp: '',
-                startReportDate: '',
-                endReportDate: '',
+                startReportDate: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+                endReportDate: moment().subtract(1, 'days').format('YYYY-MM-DD'),
                 queryTypeList: [], //查询类型
                 reportType: 0, //数据分类:默认分日
                 page: 1,
@@ -165,12 +166,12 @@ export default {
             this.params.erp = this.params.erp.replace(/，/g, ',');//将中文逗号替换为英文逗号
             this.params.erp = this.params.erp.replace(/,$/g, '');//将末尾逗号删除
 
-            let isOK = (/^[0-9,]*$/).test(this.params.erp)
+            let isOK = (/^[\w,]*$/).test(this.params.erp)
             let erpArr = this.params.erp.split(',')
             let newArr = _.uniq(erpArr)//去重后的数组
             if (!isOK || newArr.length < erpArr.length){//如果有重复
                 this.$Notification({
-                    message: '审核人员只允许填写数字与英文逗号，且不可以重复!',
+                    message: '审核人员erp只允许填写字母和数字，且不可以重复!',
                     type: 'error',
                 })
                 return false

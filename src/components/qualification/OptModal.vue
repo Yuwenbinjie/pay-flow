@@ -211,7 +211,7 @@ export default {
             if (!this.checkedParam()) {
                 return
             }
-            let res = await this.$post('/qualification/markQualificationPackage', this.params)
+            let res = await this.$post('/material/qualification/markQualificationPackage', this.params)
             if (res) {
                 this.cancelOpt()
             }

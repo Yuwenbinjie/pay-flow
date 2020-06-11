@@ -40,6 +40,7 @@
                 </j-menu-item>
             </j-submenu>
             <j-submenu
+                v-show="isAuth(2)"
                 item-key="report"
             >
                 <template slot="title">
@@ -47,6 +48,7 @@
                     <span>审核报表</span>
                 </template>
                 <j-menu-item
+                    v-show="isAuth(2)"
                     item-key="erpReport"
                 >
                     <router-link to="/erpReport">
@@ -101,7 +103,7 @@ export default {
             return this.authList.includes(code)
         },
         async getAuth() {//获取权限信息
-            let res = await this.$post('/qualification/authList')
+            let res = await this.$post('/material/qualification/authList')
             if (res) {
                 // console.log(res)
                 this.authList = res

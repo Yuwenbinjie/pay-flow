@@ -2,14 +2,17 @@ export const columns = [
     {
         key: 'reportDate',
         title: '审核时间',
+        minWidth: 120,
     },
     {
         key: 'queryTypeName',
         title: '查询类型',
+        minWidth: 120,
     },
     {
         key: 'erp',
         title: '审核人',
+        minWidth: 125,
     },
     {
         title: '通过量',
@@ -26,26 +29,30 @@ export const columns = [
         children: [{
             key: 'rejectTwo',
             title: '图片违规',
+            minWidth: 100,
             render: (val, row)=>{
-                return `${val}(${row.rejectTwoPer}%)`
+                return `${val}(${row.rejectTwoPer})`
             }
         }, {
             key: 'rejectFour',
             title: '文案违规',
+            minWidth: 100,
             render: (val, row)=>{
-                return `${val}(${row.rejectFourPer}%)`
+                return `${val}(${row.rejectFourPer})`
             }
         }, {
             key: 'rejectEight',
             title: '缺少资质',
+            minWidth: 100,
             render: (val, row)=>{
-                return `${val}(${row.rejectEightPer}%)`
+                return `${val}(${row.rejectEightPer})`
             }
         }, {
             key: 'rejectOne',
             title: '其他原因',
+            minWidth: 100,
             render: (val, row)=>{
-                return `${val}(${row.rejectOnePer}%)`
+                return `${val}(${row.rejectOnePer})`
             }
         }]
     },

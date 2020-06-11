@@ -17,16 +17,17 @@ module.exports = {
                 changeOrigin: true,
             },
             '/material': {
-                target: 'http://admin.deal-api.jd.com',
-                secure: false,
-                changeOrigin: true,
-            },
-            '/qualification': {
                 // target: 'http://pts-api.jd.com/mock/5ea1397f6823840101d39a57',
                 target: 'http://admin.deal-api.jd.com',
                 secure: false,
                 changeOrigin: true,
             },
+            // '/qualification': {
+            //     // target: 'http://pts-api.jd.com/mock/5ea1397f6823840101d39a57',
+            //     target: 'http://admin.deal-api.jd.com',
+            //     secure: false,
+            //     changeOrigin: true,
+            // },
         }
     }
 }
