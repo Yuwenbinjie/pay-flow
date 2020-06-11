@@ -16,7 +16,7 @@ module.exports = {
                 secure: false,
                 changeOrigin: true,
             },
-            '/media': {
+            '/material': {
                 target: 'http://admin.deal-api.jd.com',
                 secure: false,
                 changeOrigin: true,

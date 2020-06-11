@@ -39,6 +39,21 @@
                     </router-link>
                 </j-menu-item>
             </j-submenu>
+            <j-submenu
+                item-key="report"
+            >
+                <template slot="title">
+                    <j-icon type="file-text-o" />
+                    <span>审核报表</span>
+                </template>
+                <j-menu-item
+                    item-key="erpReport"
+                >
+                    <router-link to="/erpReport">
+                        <div>审核ERP报表</div>
+                    </router-link>
+                </j-menu-item>
+            </j-submenu>
         </j-menu>
     </div>
 </template>
@@ -60,6 +75,11 @@ export default {
                     'qualification': [
                         'qualificationMark',
                         'qualificationLook',
+                    ]
+                },
+                {
+                    'report': [
+                        'erpReport',
                     ]
                 },
             ]
