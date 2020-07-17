@@ -10,6 +10,11 @@
 .fs18{font-size:18px!important}
 .fs20{font-size:20px!important}
 .fs24{font-size:24px!important}
+.fs28{font-size:28px!important}
+.fs32{font-size:32px!important}
+.fs40{font-size:40px!important}
+.fs50{font-size:50px!important}
+.fs60{font-size:60px!important}
 
 /* line-height (fs+8)*/
 .l20{ line-height: 20px}
@@ -36,6 +41,8 @@
 .c-green{color:#20d08c!important}
 .c-yellow{color:#ffb200!important}
 .c-red{color:#e91a1a!important}
+.c-white{color:#fff!important}
+.c-blue2{color:#3755be}//背景蓝色字体
 
 /*background-color*/
 .b-white{background-color:#fff!important}
@@ -46,6 +53,7 @@
 /*display*/
 .inline-block{display:inline-block!important}
 .block{display:block!important}
+.flex{display:flex!important}
 .hidden{overflow:hidden!important}
 
 /*对齐方式*/
@@ -129,6 +137,7 @@
 .m40{margin:40px!important}
 
 /*margin-left*/
+.mx4,.ml4{margin-left:4px!important}
 .mx8,.ml8{margin-left:8px!important}
 .mx12,.ml12{margin-left:12px!important}
 .mx16,.ml16{margin-left:16px!important}

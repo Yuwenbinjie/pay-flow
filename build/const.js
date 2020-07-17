@@ -2,9 +2,9 @@ const path = require('path')
 
 module.exports = {
     //项目路径
-    base: 'checkSystem',
+    base: 'payFlow',
     //项目名称
-    title: 'checkSystem-ui',
+    title: 'payFlow-ui',
     //不同环境下配置
     development: {//本地开发环境
         erpLoginUrl: '//test.ssa.jd.com',

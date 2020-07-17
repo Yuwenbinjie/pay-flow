@@ -6,19 +6,16 @@ import '@/assets/scss/font.scss'
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import router from './router'
-import JadPc from 'jad-pc'
-import JadPro from 'jad-pc-pro'
-import 'jad-pc/dist/jad.css'
-import 'jad-pc-pro/style/index.scss'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import store from './store'
 import App from './App.vue'
-import $post from './utils/$post'
+import web3 from './utils/web3'
 
 Vue.use(VueResource)
-Vue.use(JadPc)
-Vue.use(JadPro)
+Vue.use(ElementUI)
 
-Vue.prototype.$post = $post
+Vue.prototype.web3 = web3
 Vue.config.productionTip = false
 
 new Vue({
