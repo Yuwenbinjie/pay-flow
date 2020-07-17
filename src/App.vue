@@ -4,9 +4,9 @@
             <ui-header />
             <div id="main">
                 <!-- <div class="content-box"> -->
-                    <router-view
-                        :key="$route.path"
-                    />
+                <router-view
+                    :key="$route.path"
+                />
                 <!-- </div> -->
             </div>
         </div>

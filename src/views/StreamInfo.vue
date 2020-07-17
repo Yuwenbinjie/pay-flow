@@ -4,75 +4,115 @@
             流信息
         </p>
         <div class="panel">
-            <div class="flex" style="justify-content:space-between;">
+            <div
+                class="flex"
+                style="justify-content:space-between;"
+            >
                 <div>
-                    <div id="liquidfill" style="width:550px;height:500px;"></div>
+                    <div
+                        id="liquidfill"
+                        style="width:550px;height:500px;"
+                    />
                 </div>
                 <div style="flex:auto;margin-left:2vw;">
                     <el-card>
-                        <div slot="header" class="clearfix">
+                        <div
+                            slot="header"
+                            class="clearfix"
+                        >
                             <span class="l40 bold fs18">流信息详情</span>
-                            <el-button icon="el-icon-switch-button" type="danger" round style="float: right">取消</el-button>
+                            <el-button
+                                icon="el-icon-switch-button"
+                                type="danger"
+                                round
+                                style="float: right"
+                            >
+                                取消
+                            </el-button>
                         </div>
                         <div>
                             <el-row class="t-c mb16">
                                 <el-col :span="10">
-                                    <el-tag style="width:100%;" effect="plain">发送：{{sender | filterName}}</el-tag>
+                                    <el-tag
+                                        style="width:100%;"
+                                        effect="plain"
+                                    >
+                                        发送：{{ sender | filterName }}
+                                    </el-tag>
                                 </el-col>
                                 <el-col :span="4">
-                                    <i class="el-icon-d-arrow-right"></i>
+                                    <i class="el-icon-d-arrow-right" />
                                 </el-col>
                                 <el-col :span="10">
-                                    <el-tag style="width:100%;" effect="plain">接收：{{recipient | filterName}}</el-tag>
+                                    <el-tag
+                                        style="width:100%;"
+                                        effect="plain"
+                                    >
+                                        接收：{{ recipient | filterName }}
+                                    </el-tag>
                                 </el-col>
                             </el-row>
-                            <p class="bold fs18 mb12">Activity</p>
-                            <el-row :gutter="16" class="mb16">
+                            <p class="bold fs18 mb12">
+                                Activity
+                            </p>
+                            <el-row
+                                :gutter="16"
+                                class="mb16"
+                            >
                                 <el-col :span="12">
                                     <el-card shadow="never">
-                                        <p class="bold fs18">Total</p>
-                                        <p class="mt8 mb16">value of stream</p>
-                                        <span class="bold fs16">{{info.deposit}}  DAI</span>
+                                        <p class="bold fs18">
+                                            Total
+                                        </p>
+                                        <p class="mt8 mb16">
+                                            value of stream
+                                        </p>
+                                        <span class="bold fs16">{{ info.deposit }}  DAI</span>
                                     </el-card>
                                 </el-col>
                                 <el-col :span="12">
                                     <el-card shadow="never">
-                                        <p class="bold fs18">Streamed</p>
-                                        <p class="mt8 mb16">100% out of total</p>
-                                        <span class="bold fs16">{{info.remainingBalance}}  DAI</span>
+                                        <p class="bold fs18">
+                                            Streamed
+                                        </p>
+                                        <p class="mt8 mb16">
+                                            100% out of total
+                                        </p>
+                                        <span class="bold fs16">{{ info.remainingBalance }}  DAI</span>
                                     </el-card>
                                 </el-col>
                             </el-row>
-                            <p class="bold fs18 mb12">Duration</p>
+                            <p class="bold fs18 mb12">
+                                Duration
+                            </p>
                             <el-card shadow="never">
-                                <p class="bold">Ended on</p>
+                                <p class="bold">
+                                    Ended on
+                                </p>
                                 <p class="bold fs18 my16">
-                                    <i class="el-icon-watch"></i>
-                                    <span>{{info.stopTime|filterDate}}</span>
+                                    <i class="el-icon-watch" />
+                                    <span>{{ info.stopTime|filterDate }}</span>
                                 </p>
                                 <p>
-                                    This stream was started on 
-                                    <span class="bold">{{info.startTime|filterDate}}</span>
-                                    and ended on 
-                                    <span class="bold">{{info.stopTime|filterDate}}</span>.
+                                    This stream was started on
+                                    <span class="bold">{{ info.startTime|filterDate }}</span>
+                                    and ended on
+                                    <span class="bold">{{ info.stopTime|filterDate }}</span>.
                                 </p>
                             </el-card>
                         </div>
                     </el-card>
                 </div>
             </div>
-            
         </div>
     </div>
 </template>
 
 <script>
-import _ from 'lodash'
 import moment from 'moment'
 import echarts from 'echarts'
 import 'echarts-liquidfill'
 import sablierInstance from '../utils/sablierInstance'
-import testnetInstance from '../utils/testNetInstance'
 import {mapState} from 'vuex'
 
 export default {
@@ -85,14 +125,14 @@ export default {
     },
     filters: {
         filterName(val) {
-            if (val.length>10) {
-                return val.substr(0,4) + '...' + val.substr(val.length-4,4)
+            if (val.length > 10) {
+                return val.substr(0, 4) + '...' + val.substr(val.length - 4, 4)
             } else {
                 return val
             }
         },
         filterDate(val) {
-            let date = moment(parseInt(val)).format("dddd, MMM Do YYYY, h:mm:ss a")
+            let date = moment(parseInt(val, 10)).format('dddd, MMM Do YYYY, h:mm:ss a')
             return date
         },
     },
@@ -108,8 +148,7 @@ export default {
     },
     methods: {
         initChart(){
-            let remainderPer = parseInt(this.info.remainingBalance)/parseInt(this.info.deposit)
-            console.log(remainderPer)
+            let remainderPer = parseInt(this.info.remainingBalance, 10) / parseInt(this.info.deposit, 10)
             let chart = echarts.init(document.getElementById('liquidfill'))
             let option = {
                 series: [{
@@ -120,7 +159,7 @@ export default {
                 }],
                 tooltip: {
                     show: true,
-                    formatter: '{a}:'+remainderPer*100+'%'
+                    formatter: '{a}:' + remainderPer * 100 + '%'
                 },
             }
             chart.setOption(option)
@@ -128,10 +167,10 @@ export default {
         async getInfo(){//请求流数据
             this.streamId = this.$route.query.streamId
             this.info = await sablierInstance.methods.getStream(this.streamId).call({
-                gas:3000000,
-                from:this.sender
+                gas: 3000000,
+                from: this.sender
             })
-            console.log(this.info)
+            // console.log(this.info)
         },
     },
 }

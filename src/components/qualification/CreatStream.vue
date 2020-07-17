@@ -1,18 +1,28 @@
 <template>
     <el-drawer
         :visible.sync="showModal"
-        @close="closeModal">
-        <div slot="title" class="bold fs20">创建流</div>
+        @close="closeModal"
+    >
+        <div
+            slot="title"
+            class="bold fs20"
+        >
+            创建流
+        </div>
         <div class="px20">
-            <el-form label-position="top" label-width="80px" :model="params">
+            <el-form
+                label-position="top"
+                label-width="80px"
+                :model="params"
+            >
                 <el-form-item label="谁是收件人？（ENS名称或以太坊地址）">
-                    <el-input v-model="params.recipient"></el-input>
+                    <el-input v-model="params.recipient" />
                 </el-form-item>
                 <el-form-item label="流金额">
-                    <el-input v-model="params.deposit"></el-input>
+                    <el-input v-model="params.deposit" />
                 </el-form-item>
                 <el-form-item label="币种">
-                    <el-input v-model="params.address"></el-input>
+                    <el-input v-model="params.address" />
                 </el-form-item>
                 <el-form-item label="起止时间">
                     <el-date-picker
@@ -23,12 +33,18 @@
                         value-format="timestamp"
                         range-separator="至"
                         start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-                    </el-date-picker>
+                        end-placeholder="结束日期"
+                    />
                 </el-form-item>
                 <el-form-item>
-                    <el-button round class="mt36 py16" style="width:100%" type="primary" @click="save">
-                        创建流<i class="el-icon-right el-icon--right"></i>
+                    <el-button
+                        round
+                        class="mt36 py16"
+                        style="width:100%"
+                        type="primary"
+                        @click="save"
+                    >
+                        创建流<i class="el-icon-right el-icon--right" />
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -67,7 +83,7 @@ export default {
     watch: {
         showModal(val){
             if (val) {
-                console.log(this.sender,this.recipient)
+                // console.log(this.sender, this.recipient)
                 this.params.recipient = this.recipient
                 this.params.address = testnetInstance.options.address
             }
@@ -75,24 +91,25 @@ export default {
     },
     methods: {
         async save() {
-            console.log(this.dateTime)
+            // console.log(this.dateTime)
             //批准、铸币
-            await testnetInstance.methods.approve(sablierInstance.options.address,this.params.deposit).send({
-                gas:3000000,
-                from:this.sender
+            await testnetInstance.methods.approve(sablierInstance.options.address, this.params.deposit).send({
+                gas: 3000000,
+                from: this.sender
             });
-            await testnetInstance.methods.mint(this.sender,this.params.deposit).send({
-                gas:3000000,
-                from:this.sender
+            await testnetInstance.methods.mint(this.sender, this.params.deposit).send({
+                gas: 3000000,
+                from: this.sender
             });
             let res = await sablierInstance.methods
-                .createStream(this.params.recipient, this.params.deposit, this.params.address, this.dateTime[0], this.dateTime[1])
+                .createStream(this.params.recipient, this.params.deposit,
+                    this.params.address, this.dateTime[0], this.dateTime[1])
                 .send({
-                    gas:3000000,
-                    from:this.sender
+                    gas: 3000000,
+                    from: this.sender
                 })
             if (res) {
-                console.log(res)
+                // console.log(res)
                 this.closeModal()
             }
 

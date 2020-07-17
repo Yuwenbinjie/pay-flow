@@ -20,45 +20,58 @@
             </div>
             <el-table
                 :data="data"
-                border>
+                border
+            >
                 <el-table-column
                     prop="streamId"
-                    label="流ID">
-                </el-table-column>
+                    label="流ID"
+                />
                 <el-table-column
                     prop="sender"
-                    label="发送者">
-                </el-table-column>
+                    label="发送者"
+                />
                 <el-table-column
                     prop="recipient"
-                    label="接收者">
-                </el-table-column>
+                    label="接收者"
+                />
                 <el-table-column
                     prop="deposit"
-                    label="流金额">
-                </el-table-column>
+                    label="流金额"
+                />
                 <el-table-column
                     prop="tokenAddress"
-                    label="币种">
-                </el-table-column>
+                    label="币种"
+                />
                 <el-table-column
                     prop="startTime"
                     label="开始时间"
-                    :formatter="formatterDate">
-                </el-table-column>
+                    :formatter="formatterDate"
+                />
                 <el-table-column
                     prop="stopTime"
                     label="结束时间"
-                    :formatter="formatterDate">
-                </el-table-column>
+                    :formatter="formatterDate"
+                />
                 <el-table-column
-                    label="操作">
+                    label="操作"
+                >
                     <template slot-scope="scope">
-                        <router-link to="/streamInfo" class="mr16">
-                            <el-button icon="el-icon-link" title="查看链接" circle></el-button>
+                        <router-link
+                            to="/streamInfo"
+                            class="mr16"
+                        >
+                            <el-button
+                                icon="el-icon-link"
+                                title="查看链接"
+                                circle
+                            />
                         </router-link>
                         <router-link :to="{path: '/streamInfo', query: {streamId:scope.row.streamId}}">
-                            <el-button icon="el-icon-right" title="查看流" circle></el-button>
+                            <el-button
+                                icon="el-icon-right"
+                                title="查看流"
+                                circle
+                            />
                         </router-link>
                     </template>
                 </el-table-column>
@@ -71,7 +84,6 @@
 import _ from 'lodash'
 import moment from 'moment'
 import sablierInstance from '../utils/sablierInstance'
-import testnetInstance from '../utils/testNetInstance'
 import CreatStream from '@/components/qualification/CreatStream.vue'
 
 export default {
@@ -91,7 +103,7 @@ export default {
     },
     methods: {
         formatterDate(row, column, val) {
-            return moment(parseInt(val)).format('YYYY-MM-DD');
+            return moment(parseInt(val, 10)).format('YYYY-MM-DD');
         },
         creat() {
             this.showModal = true
@@ -101,10 +113,10 @@ export default {
             this.ajaxQuery()
         },
         async ajaxQuery(){//post请求列表数据
-            sablierInstance.getPastEvents('CreateStream',{fromBlock:0},async (error,events) => {
+            sablierInstance.getPastEvents('CreateStream', {fromBlock: 0}, async (error, events) => {
                 //如果有i个事件，分别循环打印出所有时间的以下信息
-                this.data = _.map(events,'returnValues')
-                console.log(this.data)
+                this.data = _.map(events, 'returnValues')
+                // console.log(this.data)
             })
         },
     },
