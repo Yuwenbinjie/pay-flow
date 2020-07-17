@@ -8,9 +8,12 @@ const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 const confDev = require('./config.dev.js')
 const confProd = require('./config.prod.js')
 
+//获取打包参数
+let argv = getArgv(process)
+
 //根据不同环境获取const配置
 let configConst = require('./const.js')
-configConst = Object.assign(configConst,configConst[process.env.NODE_ENV])
+configConst = Object.assign(configConst,configConst[argv.type])
 
 //动态插入打包好的dll包
 let dllPlugins = []
@@ -106,7 +109,22 @@ let conf = {
 
 module.exports = (()=>{
     let env = process.env.NODE_ENV
-    let envConf = env === 'production' ? confProd : confDev
+    let envConf = env === 'development' ?  confDev : confProd
     configureWebpack = merge(conf.configureWebpack,envConf.configureWebpack)
     return Object.assign(conf,envConf,{configureWebpack})
 })()
+
+//获取并处理process参数
+function getArgv(process) {
+    let argv = {}
+    for (let i = 0; i < process.argv.length; i++) {
+        if (process.argv[i].substr(0, 2) == '--') {
+            if (i + 1 < process.argv.length && process.argv[i + 1].substr(0, 2) != '--') {
+                argv[process.argv[i].substr(2)] = process.argv[i + 1]
+            } else {
+                argv[process.argv[i].substr(2)] = true
+            }
+        }
+    }
+    return argv
+}

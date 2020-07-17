@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import QualificationMark from '../views/QualificationMark.vue'
-import QualificationLook from '../views/QualificationLook.vue'
+import Dashboard from '../views/Dashboard.vue'
+import StreamInfo from '../views/StreamInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -14,20 +14,20 @@ const routes = [
     {
         path: '/home',
         name: 'Home',
-        display: '首页',
+        display: '主页',
         component: Home,
     },
     {
-        path: '/qualificationMark',
-        name: 'QualificationMark',
-        display: '资质标注',
-        component: QualificationMark,
+        path: '/dashboard',
+        name: 'Dashboard',
+        display: '仪表盘',
+        component: Dashboard,
     },
     {
-        path: '/qualificationLook',
-        name: 'QualificationLook',
-        display: '资质查看',
-        component: QualificationLook,
+        path: '/streamInfo',
+        name: 'StreamInfo',
+        display: '流信息',
+        component: StreamInfo,
     },
 ]
 
