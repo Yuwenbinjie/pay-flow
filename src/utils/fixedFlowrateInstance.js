@@ -3,7 +3,7 @@ import web3 from './web3';
 // let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 
-const address = '0x665e34C5E8E2CE25280618165919C9D0a72c98D3';
+const address = '0xB5982323682c96497f27ddC4dcF0F50eAC177491';
 const abi = [
     {
         'inputs': [],
@@ -45,7 +45,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'CancelStream',
+        'name': 'CancelFixedFlowrateStream',
         'type': 'event'
     },
     {
@@ -72,7 +72,7 @@ const abi = [
             {
                 'indexed': false,
                 'internalType': 'uint256',
-                'name': 'deposit',
+                'name': 'maxAmount',
                 'type': 'uint256'
             },
             {
@@ -90,11 +90,17 @@ const abi = [
             {
                 'indexed': false,
                 'internalType': 'uint256',
-                'name': 'stopTime',
+                'name': 'maxStopTime',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'ratePerSecond',
                 'type': 'uint256'
             }
         ],
-        'name': 'CreateStream',
+        'name': 'CreateFixedFlowrateStream',
         'type': 'event'
     },
     {
@@ -159,6 +165,25 @@ const abi = [
         'anonymous': false,
         'inputs': [
             {
+                'indexed': true,
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'TransferWithFixedFlowrate',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
                 'indexed': false,
                 'internalType': 'address',
                 'name': 'account',
@@ -190,7 +215,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'WithdrawFromStream',
+        'name': 'WithdrawFromFixedFlowrateStream',
         'type': 'event'
     },
     {
@@ -355,7 +380,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'getStream',
+        'name': 'getFixedFlowrateStream',
         'outputs': [
             {
                 'internalType': 'address',
@@ -369,7 +394,7 @@ const abi = [
             },
             {
                 'internalType': 'uint256',
-                'name': 'deposit',
+                'name': 'maxAmount',
                 'type': 'uint256'
             },
             {
@@ -384,64 +409,17 @@ const abi = [
             },
             {
                 'internalType': 'uint256',
-                'name': 'stopTime',
-                'type': 'uint256'
-            },
-            {
-                'internalType': 'uint256',
-                'name': 'remainingBalance',
+                'name': 'maxStopTime',
                 'type': 'uint256'
             },
             {
                 'internalType': 'uint256',
                 'name': 'ratePerSecond',
                 'type': 'uint256'
-            }
-        ],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'constant': true,
-        'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'streamId',
-                'type': 'uint256'
-            }
-        ],
-        'name': 'deltaOf',
-        'outputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'delta',
-                'type': 'uint256'
-            }
-        ],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'constant': true,
-        'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'streamId',
-                'type': 'uint256'
             },
             {
-                'internalType': 'address',
-                'name': 'who',
-                'type': 'address'
-            }
-        ],
-        'name': 'balanceOf',
-        'outputs': [
-            {
                 'internalType': 'uint256',
-                'name': 'balance',
+                'name': 'withdrawalAmount',
                 'type': 'uint256'
             }
         ],
@@ -459,7 +437,7 @@ const abi = [
             },
             {
                 'internalType': 'uint256',
-                'name': 'deposit',
+                'name': 'maxAmount',
                 'type': 'uint256'
             },
             {
@@ -469,20 +447,67 @@ const abi = [
             },
             {
                 'internalType': 'uint256',
-                'name': 'startTime',
+                'name': 'ratePerSecond',
                 'type': 'uint256'
             },
             {
                 'internalType': 'uint256',
-                'name': 'stopTime',
+                'name': 'startTime',
                 'type': 'uint256'
             }
         ],
-        'name': 'createStream',
+        'name': 'createFixedFlowrateStream',
         'outputs': [
             {
                 'internalType': 'uint256',
                 'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'fixedFlowrateDeltaOf',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'constant': false,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'address',
+                'name': 'who',
+                'type': 'address'
+            }
+        ],
+        'name': 'fixedFlowrateBalanceOf',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'balance',
                 'type': 'uint256'
             }
         ],
@@ -504,7 +529,33 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'withdrawFromStream',
+        'name': 'transferWithFixedFlowrate',
+        'outputs': [
+            {
+                'internalType': 'bool',
+                'name': '',
+                'type': 'bool'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': false,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'withdrawFromFlowrateStream',
         'outputs': [
             {
                 'internalType': 'bool',
@@ -525,7 +576,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'cancelStream',
+        'name': 'cancelFlowrateStream',
         'outputs': [
             {
                 'internalType': 'bool',
@@ -536,9 +587,24 @@ const abi = [
         'payable': false,
         'stateMutability': 'nonpayable',
         'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [],
+        'name': 'getTime',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function'
     }
-];
+]
 
-const sablierInstance = new web3.eth.Contract(abi, address);
+const fixedFlowrateInstance = new web3.eth.Contract(abi, address);
 
-export default sablierInstance;
+export default fixedFlowrateInstance;
