@@ -3,7 +3,7 @@ import web3 from './web3';
 // let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 
-const address = '0x665e34C5E8E2CE25280618165919C9D0a72c98D3';
+const address = '0x5a528Eba70e6CB704B7D124D72ED3eefc74179Ec';
 const abi = [
     {
         'inputs': [],
@@ -43,9 +43,15 @@ const abi = [
                 'internalType': 'uint256',
                 'name': 'recipientBalance',
                 'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'feesOfRrotocol',
+                'type': 'uint256'
             }
         ],
-        'name': 'CancelStream',
+        'name': 'CancelInstallmentStream',
         'type': 'event'
     },
     {
@@ -92,9 +98,21 @@ const abi = [
                 'internalType': 'uint256',
                 'name': 'stopTime',
                 'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'numberOfInstallments',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'feesOfRecipientPer',
+                'type': 'uint256'
             }
         ],
-        'name': 'CreateStream',
+        'name': 'CreateInstallmentStream',
         'type': 'event'
     },
     {
@@ -159,6 +177,44 @@ const abi = [
         'anonymous': false,
         'inputs': [
             {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'tokenAddress',
+                'type': 'address'
+            },
+            {
+                'indexed': true,
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'TakeEarnings',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'transferAmount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'TransferWithInstallment',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
                 'indexed': false,
                 'internalType': 'address',
                 'name': 'account',
@@ -166,6 +222,19 @@ const abi = [
             }
         ],
         'name': 'Unpaused',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'uint256',
+                'name': 'fee',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'UpdateFee',
         'type': 'event'
     },
     {
@@ -188,9 +257,21 @@ const abi = [
                 'internalType': 'uint256',
                 'name': 'amount',
                 'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'actualAmount',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'feesOfRrotocol',
+                'type': 'uint256'
             }
         ],
-        'name': 'WithdrawFromStream',
+        'name': 'WithdrawFromInstallmentStream',
         'type': 'event'
     },
     {
@@ -206,6 +287,21 @@ const abi = [
         'outputs': [],
         'payable': false,
         'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [],
+        'name': 'expFeeOfProtocol',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'mantissa',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
         'type': 'function'
     },
     {
@@ -347,6 +443,93 @@ const abi = [
         'type': 'function'
     },
     {
+        'constant': false,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'feePer',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'updateFeesOfProtocolPer',
+        'outputs': [],
+        'payable': false,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'tokenAddress',
+                'type': 'address'
+            }
+        ],
+        'name': 'getEarnings',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'constant': false,
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'tokenAddress',
+                'type': 'address'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'takeEarnings',
+        'outputs': [],
+        'payable': false,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'duration',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'numberOfInstallments',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'calculationFeesOfProtocol',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
         'constant': true,
         'inputs': [
             {
@@ -355,7 +538,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'getStream',
+        'name': 'getInstallmentStream',
         'outputs': [
             {
                 'internalType': 'address',
@@ -389,59 +572,17 @@ const abi = [
             },
             {
                 'internalType': 'uint256',
-                'name': 'remainingBalance',
+                'name': 'numberOfInstallments',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'feesOfRecipientPer',
                 'type': 'uint256'
             },
             {
                 'internalType': 'uint256',
                 'name': 'ratePerSecond',
-                'type': 'uint256'
-            }
-        ],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'constant': true,
-        'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'streamId',
-                'type': 'uint256'
-            }
-        ],
-        'name': 'deltaOf',
-        'outputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'delta',
-                'type': 'uint256'
-            }
-        ],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'constant': true,
-        'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'streamId',
-                'type': 'uint256'
-            },
-            {
-                'internalType': 'address',
-                'name': 'who',
-                'type': 'address'
-            }
-        ],
-        'name': 'balanceOf',
-        'outputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'balance',
                 'type': 'uint256'
             }
         ],
@@ -476,14 +617,92 @@ const abi = [
                 'internalType': 'uint256',
                 'name': 'stopTime',
                 'type': 'uint256'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'numberOfInstallments',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'uint256',
+                'name': 'feesOfRecipientPer',
+                'type': 'uint256'
             }
         ],
-        'name': 'createStream',
+        'name': 'createInstallmentStream',
         'outputs': [
             {
                 'internalType': 'uint256',
                 'name': '',
                 'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'installmentDelataOf',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'constant': false,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            },
+            {
+                'internalType': 'address',
+                'name': 'who',
+                'type': 'address'
+            }
+        ],
+        'name': 'installmentBalanceOf',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'balance',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'constant': false,
+        'inputs': [
+            {
+                'internalType': 'uint256',
+                'name': 'streamId',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'transferWithInstallment',
+        'outputs': [
+            {
+                'internalType': 'bool',
+                'name': '',
+                'type': 'bool'
             }
         ],
         'payable': false,
@@ -504,7 +723,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'withdrawFromStream',
+        'name': 'withdrawInstallmentStream',
         'outputs': [
             {
                 'internalType': 'bool',
@@ -525,7 +744,7 @@ const abi = [
                 'type': 'uint256'
             }
         ],
-        'name': 'cancelStream',
+        'name': 'cancelInstallmentStream',
         'outputs': [
             {
                 'internalType': 'bool',
@@ -536,9 +755,24 @@ const abi = [
         'payable': false,
         'stateMutability': 'nonpayable',
         'type': 'function'
+    },
+    {
+        'constant': true,
+        'inputs': [],
+        'name': 'getTime',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function'
     }
-];
+]
 
-const sablierInstance = new web3.eth.Contract(abi, address);
+const installmentInstance = new web3.eth.Contract(abi, address);
 
-export default sablierInstance;
+export default installmentInstance;

@@ -8,13 +8,16 @@
                 class="flex"
                 style="justify-content:space-between;"
             >
-                <div>
+                <div
+                    v-if="activeTabName=='sablier'"
+                    style="margin-right:2vw;"
+                >
                     <div
                         id="liquidfill"
                         style="width:550px;height:500px;"
                     />
                 </div>
-                <div style="flex:auto;margin-left:2vw;">
+                <div style="flex:auto;">
                     <el-card>
                         <div
                             slot="header"
@@ -113,6 +116,9 @@ import moment from 'moment'
 import echarts from 'echarts'
 import 'echarts-liquidfill'
 import sablierInstance from '../utils/sablierInstance'
+import fixedFlowrateInstance from '../utils/fixedFlowrateInstance'
+import installmentInstance from '../utils/installmentInstance'
+import installmentWithDPInstance from '../utils/installmentWithDPInstance'
 import {mapState} from 'vuex'
 
 export default {
@@ -120,6 +126,7 @@ export default {
     data() {
         return {
             streamId: '', //流ID
+            activeTabName: 'sablier', //流类型
             info: {},
         }
     },
@@ -141,7 +148,9 @@ export default {
     },
     async mounted(){
         await this.getInfo()//获取流信息
-        this.initChart()//生成图表
+        if (this.activeTabName == 'sablier') {
+            this.initChart()
+        }//生成图表
     },
     computed: {
         ...mapState(['sender', 'recipient']),
@@ -166,11 +175,30 @@ export default {
         },
         async getInfo(){//请求流数据
             this.streamId = this.$route.query.streamId
-            this.info = await sablierInstance.methods.getStream(this.streamId).call({
-                gas: 3000000,
-                from: this.sender
-            })
-            // console.log(this.info)
+            this.activeTabName = this.$route.query.activeTabName
+            if (this.activeTabName == 'sablier'){
+                this.info = await sablierInstance.methods.getStream(this.streamId).call({
+                    gas: 3000000,
+                    from: this.sender
+                })
+                // console.log(this.info)
+            } else if (this.activeTabName == 'fixedFlowrate') {
+                this.info = await fixedFlowrateInstance.methods.getFixedFlowrateStream(this.streamId).call({
+                    gas: 3000000,
+                    from: this.sender
+                })
+            } else if (this.activeTabName == 'installment') {
+                this.info = await installmentInstance.methods.getInstallmentStream(this.streamId).call({
+                    gas: 3000000,
+                    from: this.sender
+                })
+            } else if (this.activeTabName == 'installmentWithDP') {
+                this.info = await installmentWithDPInstance.methods.getInstallmentWithDPStream(this.streamId).call({
+                    gas: 3000000,
+                    from: this.sender
+                })
+            }
+
         },
     },
 }
