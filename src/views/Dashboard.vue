@@ -3,7 +3,28 @@
         <p class="title-lv1">
             仪表盘
         </p>
-        <div class="panel">
+        <el-tabs
+            v-model="activeTabName"
+            @tab-click="changeTab"
+        >
+            <el-tab-pane
+                label="固定金额流"
+                name="sablier"
+            />
+            <el-tab-pane
+                label="固定流率流"
+                name="fixedFlowrate"
+            />
+            <el-tab-pane
+                label="分期流"
+                name="installment"
+            />
+            <el-tab-pane
+                label="首付分期流"
+                name="installmentWithDP"
+            />
+        </el-tabs>
+        <div class="panel minW1100">
             <div class="clearfix mb24">
                 <el-button
                     type="primary"
@@ -19,28 +40,6 @@
                     @close="closeModal"
                 />
             </div>
-            <el-tabs
-                type="card"
-                v-model="activeTabName"
-                @tab-click="changeTab"
-            >
-                <el-tab-pane
-                    label="固定金额流"
-                    name="sablier"
-                />
-                <el-tab-pane
-                    label="固定流率流"
-                    name="fixedFlowrate"
-                />
-                <el-tab-pane
-                    label="分期流"
-                    name="installment"
-                />
-                <el-tab-pane
-                    label="首付分期流"
-                    name="installmentWithDP"
-                />
-            </el-tabs>
             <el-table
                 :data="data"
                 border

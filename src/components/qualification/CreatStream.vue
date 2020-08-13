@@ -160,7 +160,7 @@ export default {
             params: {
                 recipient: '', //接收者
                 deposit: '1000000000000000000', //流金额
-                maxAmount: '1000000000000000000', //可承受最大转账金额
+                maxAmount: '10000000000', //可承受最大转账金额
                 ratePerSecond: '50', //流动率
                 tokenAddress: '', //币种
                 startTime: moment().valueOf(), //开始时间
