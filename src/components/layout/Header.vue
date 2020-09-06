@@ -1,11 +1,15 @@
 <template>
     <div id="pay-header">
-        <div class="pull-left">
-            <div class="pull-left bold">
-                <i class="icon-statistics vm fs32" />
-                <span class="vm ml8 fs24">流付</span>
+        <div class="pull-left pt8">
+            <div class="inline-block bold">
+                <!-- <i class="icon-statistics vm fs32" /> -->
+                <img
+                    src="../../assets/imgs/logo.png"
+                    class="logo_pic"
+                >
+                <span class="vt ml8 fs24">流付</span>
             </div>
-            <div class="pull-left ml64 bold">
+            <div class="inline-block ml64 bold vb">
                 <router-link
                     to="/home"
                     class="l32"
@@ -21,7 +25,10 @@
                     class="w140"
                     icon="el-icon-s-marketing"
                 >
-                    <router-link to="/dashboard">
+                    <router-link
+                        class="c-blue2"
+                        to="/dashboard"
+                    >
                         仪表盘
                     </router-link>
                 </el-button>
@@ -29,7 +36,10 @@
                     class="w140"
                     icon="el-icon-notebook-2"
                 >
-                    <router-link to="/home">
+                    <router-link
+                        class="c-blue2"
+                        to="/home"
+                    >
                         介绍文档
                     </router-link>
                 </el-button>
@@ -45,6 +55,7 @@
 </template>
 
 <script>
+import Web3 from 'web3'
 export default {
     name: 'Header',
     data() {
@@ -54,6 +65,9 @@ export default {
     },
     created() {
         this.getUser()
+        setTimeout(() =>{//防止页面持续刷新
+            this.watchEnvChange()
+        }, 2000)
     },
     filters: {
         filterName(val) {
@@ -66,24 +80,54 @@ export default {
     },
     methods: {
         getUser() {
-            this.web3.eth.getCoinbase((err, coinbase) => {
-                if (err) {
-                    // console.log('err')
-                } else {
-                    // console.log(coinbase)
-                    this.name = coinbase
-                }
-            })
+            // this.web3.eth.getCoinbase((err, coinbase) => {
+            //     this.name = coinbase
+            // })
             this.web3.eth.getAccounts().then((val)=>{
                 // console.log(val)
                 this.name = val[0]
                 this.$store.commit('updateData', {key: 'sender', value: val[0]})
                 this.$store.commit('updateData', {key: 'recipient', value: val[1]})
             })
+        },
+        watchEnvChange() {
+            //监听账号的变化。
+            window.ethereum.on('accountsChanged', (accounts) => {
+                this.name = accounts[0];
+                this.$store.commit('updateData', {key: 'sender', value: accounts[0]})
+                location.reload()
+            });
+            //监听网络
+            window.ethereum.on('chainChanged', () => {
+                location.reload()
+            });
+            //监听web3
+            window.addEventListener('load', async () => {
+                //新版web3检测metamask方式
+                if (window.ethereum) {
+                    // eslint-disable-next-line
+                    window.web3 = new Web3(ethereum);
+                    // eslint-disable-next-line
+                    await ethereum.enable();
+                }
+                // 老版web3检测metamask方式
+                else if (window.web3) {
+                    // eslint-disable-next-line
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // metamask不存在
+                else {
+                    window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+                    alert('检测到未安装metamask插件，此处用本地ganache替代');
+                }
+            });
         }
-    }
+    },
 }
 </script>
-
-<style>
+<style scoped>
+.logo_pic{
+    width: 30px;
+    height: 30px;
+}
 </style>

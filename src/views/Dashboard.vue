@@ -4,7 +4,7 @@
             仪表盘
         </p>
         <el-tabs
-            v-model="activeTabName"
+            v-model="activeTab"
             @tab-click="changeTab"
         >
             <el-tab-pane
@@ -35,7 +35,6 @@
                     创建流
                 </el-button>
                 <creat-stream
-                    :active-tab-name="activeTabName"
                     :show-modal="showModal"
                     @close="closeModal"
                 />
@@ -60,6 +59,7 @@
                     v-if="activeTabName!='fixedFlowrate'"
                     prop="deposit"
                     label="流金额"
+                    :formatter="formatMoney"
                 />
                 <el-table-column
                     prop="tokenAddress"
@@ -69,11 +69,13 @@
                     v-if="activeTabName=='fixedFlowrate'"
                     prop="maxAmount"
                     label="最大金额"
+                    :formatter="formatMoney"
                 />
                 <el-table-column
                     v-if="activeTabName=='fixedFlowrate'"
                     prop="ratePerSecond"
                     label="流动率"
+                    :formatter="formatMoney"
                 />
                 <el-table-column
                     v-if="activeTabName=='installment'||activeTabName=='installmentWithDP'"
@@ -84,22 +86,27 @@
                     v-if="activeTabName=='installment'||activeTabName=='installmentWithDP'"
                     prop="feesOfRecipientPer"
                     label="手续费"
+                    :formatter="formatMoney"
                 />
                 <el-table-column
                     v-if="activeTabName=='installmentWithDP'"
                     prop="downPaymentRatio"
                     label="首付比例"
-                />
+                >
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.downPaymentRatio }} %</div>
+                    </template>
+                </el-table-column>
                 <el-table-column
                     prop="startTime"
                     label="开始时间"
-                    :formatter="formatterDate"
+                    :formatter="formatDate"
                 />
                 <el-table-column
                     v-if="activeTabName!='fixedFlowrate'"
                     prop="stopTime"
                     label="结束时间"
-                    :formatter="formatterDate"
+                    :formatter="formatDate"
                 />
                 <el-table-column
                     width="120"
@@ -107,25 +114,25 @@
                 >
                     <template slot-scope="scope">
                         <router-link
-                            to="/streamInfo"
-                            class="mr16"
-                        >
-                            <el-button
-                                icon="el-icon-link"
-                                title="查看链接"
-                                circle
-                            />
-                        </router-link>
-                        <router-link
+                            v-if="!scope.row.isCancelStstus"
                             :to="{path: '/streamInfo',
                                   query: {streamId:scope.row.streamId, activeTabName:activeTabName}}"
                         >
                             <el-button
-                                icon="el-icon-right"
                                 title="查看流"
-                                circle
-                            />
+                                type="primary"
+                                round
+                                plain
+                            >
+                                查看<i class="el-icon-right" />
+                            </el-button>
                         </router-link>
+                        <div
+                            class="c-9"
+                            v-else
+                        >
+                            已取消
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
@@ -137,10 +144,12 @@
 import _ from 'lodash'
 import moment from 'moment'
 import {mapState} from 'vuex'
-import sablierInstance from '../utils/sablierInstance'
-import fixedFlowrateInstance from '../utils/fixedFlowrateInstance'
-import installmentInstance from '../utils/installmentInstance'
-import installmentWithDPInstance from '../utils/installmentWithDPInstance'
+import {getMoney} from '@/utils/utils.js'
+// import sablierInstance from '../utils/sablierInstance'
+// import fixedFlowrateInstance from '../utils/fixedFlowrateInstance'
+// import installmentInstance from '../utils/installmentInstance'
+// import installmentWithDPInstance from '../utils/installmentWithDPInstance'
+import {getInstance} from '../utils/connectContract'
 import CreatStream from '@/components/qualification/CreatStream.vue'
 
 export default {
@@ -151,24 +160,31 @@ export default {
     data() {
         return {
             data: [],
-            activeTabName: 'sablier',
             showModal: false,
+            cancelStreamArr: [],
+            activeTab: '',
+            allInstance: {}//获取的所有合约接口
         }
     },
-    created(){
+    async created(){
+        this.allInstance = await getInstance()
         this.ajaxQuery()
     },
     computed: {
-        ...mapState(['sender', 'recipient']),
+        ...mapState(['sender', 'recipient', 'activeTabName']),
     },
     methods: {
-        formatterDate(row, column, val) {
-            return moment(parseInt(val, 10)).format('YYYY-MM-DD');
+        formatDate(row, column, val) {
+            return moment(parseInt(val, 10), 'X').format('YYYY-MM-DD HH:mm:ss');
+        },
+        formatMoney(row, column, val) {
+            return getMoney(val)
         },
         creat() {
             this.showModal = true
         },
         changeTab(){
+            this.$store.commit('updateData', {key: 'activeTabName', value: this.activeTab})
             this.ajaxQuery()
         },
         closeModal() {
@@ -176,25 +192,57 @@ export default {
             this.ajaxQuery()
         },
         async ajaxQuery(){//post请求列表数据
+            this.activeTab = this.activeTabName
             if (this.activeTabName == 'sablier') {
-                sablierInstance.getPastEvents('CreateStream', {fromBlock: 0}, async (error, events) => {
-                    this.data = _.map(events, 'returnValues')
-                    // console.log(this.data)
+                this.allInstance.sablierInstance.getPastEvents('CancelStream', {fromBlock: 0}, async (error, events) => {
+                    this.cancelStreamArr = _.map(events, (o)=>{
+                        return o.returnValues.streamId
+                    })
+                })
+                this.allInstance.sablierInstance.getPastEvents('CreateStream', {fromBlock: 0}, async (error, events) => {
+                    this.data = _.map(events, (o)=>{
+                        o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
+                        return o.returnValues
+                    })
                 })
             } else if (this.activeTabName == 'fixedFlowrate'){
-                fixedFlowrateInstance.getPastEvents('CreateFixedFlowrateStream',
+                this.allInstance.fixedFlowrateInstance.getPastEvents('CancelFixedFlowrateStream', {fromBlock: 0}, async (error, events) => {
+                    this.cancelStreamArr = _.map(events, (o)=>{
+                        return o.returnValues.streamId
+                    })
+                })
+                this.allInstance.fixedFlowrateInstance.getPastEvents('CreateFixedFlowrateStream',
                     {fromBlock: 0}, async (error, events) => {
-                        this.data = _.map(events, 'returnValues')
+                        this.data = _.map(events, (o)=>{
+                            o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
+                            return o.returnValues
+                        })
                     // console.log(events)
                     })
             } else if (this.activeTabName == 'installment'){
-                installmentInstance.getPastEvents('CreateInstallmentStream', {fromBlock: 0}, async (error, events) => {
-                    this.data = _.map(events, 'returnValues')
+                this.allInstance.installmentInstance.getPastEvents('CancelInstallmentStream', {fromBlock: 0}, async (error, events) => {
+                    this.cancelStreamArr = _.map(events, (o)=>{
+                        return o.returnValues.streamId
+                    })
+                })
+                this.allInstance.installmentInstance.getPastEvents('CreateInstallmentStream', {fromBlock: 0}, async (error, events) => {
+                    this.data = _.map(events, (o)=>{
+                        o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
+                        return o.returnValues
+                    })
                 })
             } else if (this.activeTabName == 'installmentWithDP'){
-                installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream',
+                this.allInstance.installmentWithDPInstance.getPastEvents('CancelInstallmentWithDPStream', {fromBlock: 0}, async (error, events) => {
+                    this.cancelStreamArr = _.map(events, (o)=>{
+                        return o.returnValues.streamId
+                    })
+                })
+                this.allInstance.installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream',
                     {fromBlock: 0}, async (error, events) => {
-                        this.data = _.map(events, 'returnValues')
+                        this.data = _.map(events, (o)=>{
+                            o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
+                            return o.returnValues
+                        })
                     })
             }
 

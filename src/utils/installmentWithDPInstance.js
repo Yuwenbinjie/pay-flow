@@ -3,7 +3,7 @@ import web3 from './web3';
 // let web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 
-const address = '0x6d00111Fd0818BE0a50CDd7C1c3d70259F688B1B';
+const address = '0x40CB74e7F0477a22c4AcCDEDacbbaD17F3570A44';
 const abi = [
     {
         'inputs': [],

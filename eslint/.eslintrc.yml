@@ -80,7 +80,7 @@ rules:
     - 2
   max-len:
     - 2
-    - 140
+    - 180
   multiline-ternary:
     - 0
   callback-return:
