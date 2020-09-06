@@ -2,6 +2,15 @@
     <div class="pay-dashboard">
         <p class="title-lv1">
             流信息
+            <router-link to="/dashboard">
+                <el-button
+                    size="mini"
+                    class="vm ml16"
+                    plain
+                >
+                    返回
+                </el-button>
+            </router-link>
         </p>
         <div class="panel minW1100">
             <div
@@ -67,27 +76,41 @@
                         <div>
                             <el-row class="t-c mb16">
                                 <el-col :span="10">
-                                    <el-tag
-                                        style="width:100%;"
-                                        effect="plain"
-                                    >
-                                        发送：{{ sender | filterName }}
-                                    </el-tag>
+                                    <el-tooltip :content="`点击复制：${info.sender}`">
+                                        <el-button
+                                            size="small"
+                                            style="width:100%;"
+                                            type="primary"
+                                            class="senderText"
+                                            :data-clipboard-text="info.sender"
+                                            @click="copyText('senderText')"
+                                            plain
+                                        >
+                                            发送：{{ info.sender | filterName }}
+                                        </el-button>
+                                    </el-tooltip>
                                 </el-col>
                                 <el-col :span="4">
                                     <i class="el-icon-d-arrow-right" />
                                 </el-col>
                                 <el-col :span="10">
-                                    <el-tag
-                                        style="width:100%;"
-                                        effect="plain"
-                                    >
-                                        接收：{{ recipient | filterName }}
-                                    </el-tag>
+                                    <el-tooltip :content="`点击复制：${info.recipient}`">
+                                        <el-button
+                                            size="small"
+                                            style="width:100%;"
+                                            type="primary"
+                                            class="recipientText"
+                                            :data-clipboard-text="info.recipient"
+                                            @click="copyText('recipientText')"
+                                            plain
+                                        >
+                                            接收：{{ info.recipient | filterName }}
+                                        </el-button>
+                                    </el-tooltip>
                                 </el-col>
                             </el-row>
                             <p class="bold fs18 mb12">
-                                Information
+                                基本信息
                             </p>
                             <el-row
                                 class="mb16"
@@ -96,18 +119,18 @@
                                     <el-card shadow="never">
                                         <div v-if="activeTabName=='fixedFlowrate'">
                                             <p class="bold fs16">
-                                                最大金额转账：<span class="normal break">{{ info.maxAmount }}</span> DAI
+                                                最大金额转账：<span class="normal break">{{ getMoney(info.maxAmount) }}</span> DAI
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                流动率：<span class="normal break">{{ info.ratePerSecond }}</span> DAI
+                                                流动率：<span class="normal break">{{ getMoney(info.ratePerSecond) }}</span> DAI
                                             </p>
                                         </div>
                                         <div v-else>
                                             <p class="bold fs16">
-                                                流金额：<span class="normal break">{{ info.deposit }}</span> DAI
+                                                流金额：<span class="normal break">{{ getMoney(info.deposit) }}</span> DAI
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                已流动：<span class="normal break">{{ info.deposit - senderBalance }}</span> DAI
+                                                已流动：<span class="normal break">{{ getMoney(info.deposit - senderBalance) }}</span> DAI
                                             </p>
                                         </div>
                                         <p
@@ -126,63 +149,36 @@
                                             v-if="activeTabName=='installmentWithDP'||activeTabName=='installment'"
                                             class="bold fs16 mt8"
                                         >
-                                            当前期数：<span class="normal break">{{ info.haveBeenNumberOfInstallment }}</span>
+                                            已分期数：<span class="normal break">{{ info.haveBeenNumberOfInstallment }}</span>
                                         </p>
+                                        <!-- <p
+                                            v-if="activeTabName=='installmentWithDP'||activeTabName=='installment'"
+                                            class="bold fs16 mt8"
+                                        >
+                                            分期金额：<span class="normal break">{{ getMoney(info.oneOfInstallmentAmount) }}</span>
+                                        </p> -->
                                         <p
                                             v-if="activeTabName=='installmentWithDP'||activeTabName=='installment'"
                                             class="bold fs16 mt8"
                                         >
-                                            分期金额：<span class="normal break">{{ info.installmentAmountWithFees }}</span>
-                                        </p>
-                                        <p
-                                            v-if="activeTabName=='installmentWithDP'||activeTabName=='installment'"
-                                            class="bold fs16 mt8"
-                                        >
-                                            手续费：<span class="normal break">{{ info.feesOfRecipientPer }}</span> DAI
+                                            手续费：<span class="normal break">{{ getMoney(info.feesOfRecipientPer) }}</span> DAI
                                         </p>
                                         <p class="bold fs16 mt8">
-                                            发送者余额：<span class="normal break">{{ senderBalance }}</span> DAI
+                                            发送者余额：<span class="normal break">{{ getMoney(senderBalance) }}</span> DAI
                                         </p>
                                         <p class="bold fs16 mt8">
-                                            接收者余额：<span class="normal break">{{ recipientBalance }}</span> DAI
+                                            接收者余额：<span class="normal break">{{ getMoney(recipientBalance) }}</span> DAI
                                         </p>
                                     </el-card>
                                 </el-col>
                             </el-row>
-                            <!-- <el-row
-                                :gutter="16"
-                                class="mb16"
-                            >
-                                <el-col :span="12">
-                                    <el-card shadow="never">
-                                        <p class="bold fs18">
-                                            Total
-                                        </p>
-                                        <p class="mt8 mb16">
-                                            value of stream
-                                        </p>
-                                        <span class="bold fs16 break">{{ info.deposit }}  DAI</span>
-                                    </el-card>
-                                </el-col>
-                                <el-col :span="12">
-                                    <el-card shadow="never">
-                                        <p class="bold fs18">
-                                            Streamed
-                                        </p>
-                                        <p class="mt8 mb16">
-                                            100% out of total
-                                        </p>
-                                        <span class="bold fs16 break">{{ info.deposit - balance }}  DAI</span>
-                                    </el-card>
-                                </el-col>
-                            </el-row> -->
                             <p class="bold fs18 mb12">
-                                Duration
+                                持续时间
                             </p>
                             <el-card shadow="never">
                                 <div>
                                     <p class="bold">
-                                        Started on
+                                        开始时间
                                     </p>
                                     <p class="bold fs18 my12">
                                         <i class="el-icon-watch" />
@@ -191,7 +187,7 @@
                                 </div>
                                 <div>
                                     <p class="bold mt20">
-                                        Ended on
+                                        结束时间
                                     </p>
                                     <p class="bold fs18 my12">
                                         <i class="el-icon-watch" />
@@ -200,12 +196,6 @@
                                         </span>
                                     </p>
                                 </div>
-                                <!-- <p>
-                                    This stream was started on
-                                    <span class="bold">{{ info.startTime|filterDate }}</span>
-                                    and ended on
-                                    <span class="bold">{{ info.stopTime|filterDate }}</span>.
-                                </p> -->
                             </el-card>
                         </div>
                     </el-card>
@@ -219,11 +209,9 @@
 import moment from 'moment'
 import echarts from 'echarts'
 import 'echarts-liquidfill'
-import testnetInstance from '@/utils/testNetInstance'
-import sablierInstance from '../utils/sablierInstance'
-import fixedFlowrateInstance from '../utils/fixedFlowrateInstance'
-import installmentInstance from '../utils/installmentInstance'
-import installmentWithDPInstance from '../utils/installmentWithDPInstance'
+import Clipboard from 'clipboard'
+import {setMoney, getMoney} from '@/utils/utils.js'
+import {getInstance} from '../utils/connectContract'
 import {mapState} from 'vuex'
 let timer;
 export default {
@@ -231,7 +219,6 @@ export default {
     data() {
         return {
             streamId: '', //流ID
-            activeTabName: 'sablier', //流类型
             info: {},
             senderBalance: 0, //发送者余额
             recipientBalance: 0, //接收者余额
@@ -239,38 +226,55 @@ export default {
     },
     filters: {
         filterName(val) {
-            if (val.length > 10) {
+            if (val && val.length > 10) {
                 return val.substr(0, 4) + '...' + val.substr(val.length - 4, 4)
             } else {
                 return val
             }
         },
         filterDate(val) {
-            let date = moment(parseInt(val, 10)).format('dddd, MMM Do YYYY, h:mm:ss a')
+            let date = moment(parseInt(val, 10), 'X').format('YYYY-MM-DD HH:mm:ss')
             return date
         },
     },
     created(){
         // this.getInfo()//获取流信息
-
     },
     async mounted(){
+        this.allInstance = await getInstance()
         await this.getInfo()//获取流信息
-        // if (this.activeTabName != 'fixedFlowrate') {
         let chart = echarts.init(document.getElementById('liquidfill'))
         timer = setInterval(async () =>{//每秒动态获取账户余额
             await this.getBalance()
             this.initChart(chart)
         }, 1000)
-        // }//生成图表
     },
     beforeDestroy() {
         clearInterval(timer)
     },
     computed: {
-        ...mapState(['sender', 'recipient']),
+        ...mapState(['activeTabName']),
     },
     methods: {
+        getMoney,
+        copyText(cla){//复制文本
+            let that = this
+            let clipboard = new Clipboard(`.${cla}`);
+            clipboard.on('success', function () {
+                that.$message({
+                    type: 'success',
+                    message: '成功复制到剪切板!'
+                })
+                clipboard.destroy()
+            });
+            clipboard.on('error', function () {
+                that.$message({
+                    type: 'error',
+                    message: '复制失败!'
+                })
+                clipboard.destroy()
+            });
+        },
         initChart(chart){
             let total = this.activeTabName == 'fixedFlowrate' ? this.info.maxAmount : this.info.deposit
             let flowedPer = (parseInt(total, 10) - parseInt(this.senderBalance, 10)) / parseInt(total, 10)
@@ -294,41 +298,42 @@ export default {
         },
         async getInfo(){//请求流详情数据
             this.streamId = this.$route.query.streamId
-            this.activeTabName = this.$route.query.activeTabName
+            // this.activeTabName = this.$route.query.activeTabName
             if (this.activeTabName == 'sablier'){
-                this.info = await sablierInstance.methods.getStream(this.streamId).call()
+                this.info = await this.allInstance.sablierInstance.methods.getStream(this.streamId).call()
+                // res = await this.allInstance.sablierInstance.getPastEvents('CreateStream', {filter:{streamId:this.streamId},fromBlock: 0})
             } else if (this.activeTabName == 'fixedFlowrate') {
-                this.info = await fixedFlowrateInstance.methods.getFixedFlowrateStream(this.streamId).call()
+                this.info = await this.allInstance.fixedFlowrateInstance.methods.getFixedFlowrateStream(this.streamId).call()
+                // res = await this.allInstance.fixedFlowrateInstance.getPastEvents('CreateFixedFlowrateStream', {filter:{streamId:this.streamId},fromBlock: 0})
             } else if (this.activeTabName == 'installment') {
-                this.info = await installmentInstance.methods.getInstallmentStream(this.streamId).call()
+                this.info = await this.allInstance.installmentInstance.methods.getInstallmentStream(this.streamId).call()
+                // res = await this.allInstance.installmentInstance.getPastEvents('CreateInstallmentStream', {filter:{streamId:this.streamId},fromBlock: 0})
             } else if (this.activeTabName == 'installmentWithDP') {
-                this.info = await installmentWithDPInstance.methods.getInstallmentWithDPStream(this.streamId).call()
-                // installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream',
-                //     {filter: {streamId: this.streamId}, fromBlock: 0}, async (error, events) => {
-                //         console.log(events[0].returnValues)
-                //     })
+                this.info = await this.allInstance.installmentWithDPInstance.methods.getInstallmentWithDPStream(this.streamId).call()
+                // res = await this.allInstance.installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream', {filter:{streamId:this.streamId},fromBlock: 0})
             }
+            // this.info = res[0].returnValues
         },
         async getBalance(){//获取发送/接收者余额
             let senderBalance
             let recipientBalance
             if (this.activeTabName == 'sablier'){
-                senderBalance = await sablierInstance.methods.balanceOf(this.streamId, this.info.sender).call()
-                recipientBalance = await sablierInstance.methods.balanceOf(this.streamId, this.info.recipient).call()
+                senderBalance = await this.allInstance.sablierInstance.methods.balanceOf(this.streamId, this.info.sender).call()
+                recipientBalance = await this.allInstance.sablierInstance.methods.balanceOf(this.streamId, this.info.recipient).call()
             } else if (this.activeTabName == 'fixedFlowrate') {
-                senderBalance = await fixedFlowrateInstance.methods
+                senderBalance = await this.allInstance.fixedFlowrateInstance.methods
                     .fixedFlowrateBalanceOf(this.streamId, this.info.sender).call()
-                recipientBalance = await fixedFlowrateInstance.methods
+                recipientBalance = await this.allInstance.fixedFlowrateInstance.methods
                     .fixedFlowrateBalanceOf(this.streamId, this.info.recipient).call()
             } else if (this.activeTabName == 'installment') {
-                senderBalance = await installmentInstance.methods
+                senderBalance = await this.allInstance.installmentInstance.methods
                     .installmentBalanceOf(this.streamId, this.info.sender).call()
-                recipientBalance = await installmentInstance.methods
+                recipientBalance = await this.allInstance.installmentInstance.methods
                     .installmentBalanceOf(this.streamId, this.info.recipient).call()
             } else if (this.activeTabName == 'installmentWithDP') {
-                senderBalance = await installmentWithDPInstance.methods
+                senderBalance = await this.allInstance.installmentWithDPInstance.methods
                     .installmentWithDPBalanceOf(this.streamId, this.info.sender).call()
-                recipientBalance = await installmentWithDPInstance.methods
+                recipientBalance = await this.allInstance.installmentWithDPInstance.methods
                     .installmentWithDPBalanceOf(this.streamId, this.info.recipient).call()
             }
             this.senderBalance = senderBalance
@@ -343,17 +348,17 @@ export default {
             }).then(async ({value}) => {
                 let res
                 if (this.activeTabName == 'sablier'){
-                    res = await sablierInstance.methods.withdrawFromStream(this.streamId, value)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.sablierInstance.methods.withdrawFromStream(this.streamId, setMoney(value))
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'fixedFlowrate') {
-                    res = await fixedFlowrateInstance.methods.withdrawFromFlowrateStream(this.streamId, value)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.fixedFlowrateInstance.methods.withdrawFromFlowrateStream(this.streamId, setMoney(value))
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'installment') {
-                    res = await installmentInstance.methods.withdrawInstallmentStream(this.streamId, value)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.installmentInstance.methods.withdrawInstallmentStream(this.streamId, setMoney(value))
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'installmentWithDP') {
-                    res = await installmentWithDPInstance.methods.withdrawInstallmentWithDPStream(this.streamId, value)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.installmentWithDPInstance.methods.withdrawInstallmentWithDPStream(this.streamId, setMoney(value))
+                        .send({gas: 3000000, from: this.info.sender})
                 }
                 if (res) {
                     this.$message({
@@ -370,27 +375,27 @@ export default {
             })
         },
         instalment() {//分期付款
-            this.$confirm('本期需支付金额：' + this.info.installmentAmountWithFees, '操作', {
+            this.$confirm('本期需支付金额：' + getMoney(this.info.oneOfInstallmentAmount), '操作', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
             }).then(async () => {
                 let res
                 if (this.activeTabName == 'installment') {
-                    await testnetInstance.methods
-                        .approve(installmentInstance.options.address, this.info.installmentAmountWithFees)
-                        .send({gas: 3000000, from: this.sender})
-                    await testnetInstance.methods.mint(this.sender, this.info.installmentAmountWithFees)
-                        .send({gas: 3000000, from: this.sender})
-                    res = await installmentInstance.methods.transferWithInstallment(this.streamId)
-                        .send({gas: 3000000, from: this.sender})
+                    await this.allInstance.testnetInstance.methods
+                        .approve(this.allInstance.installmentInstance.options.address, setMoney(this.info.oneOfInstallmentAmount))
+                        .send({gas: 3000000, from: this.info.sender})
+                    await this.allInstance.testnetInstance.methods.mint(this.info.sender, setMoney(this.info.oneOfInstallmentAmount))
+                        .send({gas: 3000000, from: this.info.sender})
+                    res = await this.allInstance.installmentInstance.methods.transferWithInstallment(this.streamId)
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'installmentWithDP') {
-                    await testnetInstance.methods
-                        .approve(installmentWithDPInstance.options.address, this.info.installmentAmountWithFees)
-                        .send({gas: 3000000, from: this.sender})
-                    await testnetInstance.methods.mint(this.sender, this.info.installmentAmountWithFees)
-                        .send({gas: 3000000, from: this.sender})
-                    res = await installmentWithDPInstance.methods.transferWithDP(this.streamId)
-                        .send({gas: 3000000, from: this.sender})
+                    await this.allInstance.testnetInstance.methods
+                        .approve(this.allInstance.installmentWithDPInstance.options.address, setMoney(this.info.oneOfInstallmentAmount))
+                        .send({gas: 3000000, from: this.info.sender})
+                    await this.allInstance.testnetInstance.methods.mint(this.info.sender, setMoney(this.info.oneOfInstallmentAmount))
+                        .send({gas: 3000000, from: this.info.sender})
+                    res = await this.allInstance.installmentWithDPInstance.methods.transferWithDP(this.streamId)
+                        .send({gas: 3000000, from: this.info.sender})
                 }
                 if (res) {
                     this.$message({
@@ -413,12 +418,12 @@ export default {
                 inputPattern: /^([0-9]*|[0-9]*.[0-9]+)$/,
                 inputErrorMessage: '金额输入格式不正确'
             }).then(async ({value}) => {
-                await testnetInstance.methods.approve(fixedFlowrateInstance.options.address, value)
-                    .send({gas: 3000000, from: this.sender})
-                await testnetInstance.methods.mint(this.sender, value)
-                    .send({gas: 3000000, from: this.sender})
-                let res = await fixedFlowrateInstance.methods.transferWithFixedFlowrate(this.streamId, value)
-                    .send({gas: 3000000, from: this.sender})
+                await this.allInstance.testnetInstance.methods.approve(this.allInstance.fixedFlowrateInstance.options.address, setMoney(value))
+                    .send({gas: 3000000, from: this.info.sender})
+                await this.allInstance.testnetInstance.methods.mint(this.info.sender, setMoney(value))
+                    .send({gas: 3000000, from: this.info.sender})
+                let res = await this.allInstance.fixedFlowrateInstance.methods.transferWithFixedFlowrate(this.streamId, setMoney(value))
+                    .send({gas: 3000000, from: this.info.sender})
                 if (res) {
                     this.$message({
                         type: 'success',
@@ -440,25 +445,25 @@ export default {
             }).then(async () => {
                 let res
                 if (this.activeTabName == 'sablier'){
-                    res = await sablierInstance.methods.cancelStream(this.streamId)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.sablierInstance.methods.cancelStream(this.streamId)
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'fixedFlowrate') {
-                    res = await fixedFlowrateInstance.methods.cancelFlowrateStream(this.streamId)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.fixedFlowrateInstance.methods.cancelFlowrateStream(this.streamId)
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'installment') {
-                    res = await installmentInstance.methods.cancelInstallmentStream(this.streamId)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.installmentInstance.methods.cancelInstallmentStream(this.streamId)
+                        .send({gas: 3000000, from: this.info.sender})
                 } else if (this.activeTabName == 'installmentWithDP') {
-                    res = await installmentWithDPInstance.methods.cancelInstallmentWithDPStream(this.streamId)
-                        .send({gas: 3000000, from: this.sender})
+                    res = await this.allInstance.installmentWithDPInstance.methods.cancelInstallmentWithDPStream(this.streamId)
+                        .send({gas: 3000000, from: this.info.sender})
                 }
                 if (res) {
                     clearInterval(timer)
+                    this.$router.push('/dashboard')
                     this.$message({
                         type: 'success',
                         message: '取消成功!'
                     })
-                    await this.getInfo()//重新获取流信息
                 } else {
                     this.$message({
                         type: 'error',
