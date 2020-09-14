@@ -5,9 +5,9 @@
                 <div class="fs50 bold">
                     连续的价值转移使支付成为实时行为
                 </div>
-                <div class="fs20 mt40">
+                <!-- <div class="fs20 mt40">
                     我们的开发套件提供对以太坊和 IPFS 网络的即时、可扩展的 API 访问。
-                </div>
+                </div> -->
                 <el-button
                     class="mt64"
                     round
@@ -31,7 +31,7 @@
                             固定金额流支付
                         </div>
                         <div class="t-l">
-                            在开始时间至终止时间内，流会以流动率每秒流向接收者。
+                            在开始时间至结束时间内，流会以流动率每秒流向接收者。
                         </div>
                     </el-col>
                     <el-col :span="6">
@@ -39,7 +39,7 @@
                             固定流率流支付
                         </div>
                         <div class="t-l">
-                            流在开始时间后以流动率每秒流向接收者，直到等于最大支付金额。无需设定终止时间，可增加最大支付金额，延长流的持续时间。
+                            流在开始时间后每秒以特定的速率流向接收者，直到等于最大支付金额。无需设定结束时间，可增加最大支付金额，延长流的持续时间。
                         </div>
                     </el-col>
                     <el-col :span="6">
@@ -79,6 +79,13 @@
                         >
                             Github：https://github.com/Machael-lcg/streamPay
                         </a>
+                        <a
+                            href="https://discord.gg/9sQCNK4"
+                            target="_blank"
+                            class="c-white"
+                        >
+                            Discord：https://discord.gg/9sQCNK4
+                        </a>
                         <p>微信：streampay</p>
                     </div>
                 </el-col>
@@ -87,7 +94,9 @@
                         src="../assets/imgs/wx1.jpeg"
                         class="wx_pic"
                     >
-                    <p>扫一扫关注我们</p>
+                    <p class="mt8">
+                        扫一扫关注我们
+                    </p>
                 </el-col>
             </el-row>
         </div>

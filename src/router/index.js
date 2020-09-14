@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Dashboard from '../views/Dashboard.vue'
 import StreamInfo from '../views/StreamInfo.vue'
+import CancelInfo from '../views/CancelInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,12 @@ const routes = [
         name: 'StreamInfo',
         display: '流信息',
         component: StreamInfo,
+    },
+    {
+        path: '/cancelInfo',
+        name: 'CancelInfo',
+        display: '已取消',
+        component: CancelInfo,
     },
 ]
 

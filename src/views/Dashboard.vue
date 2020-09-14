@@ -50,46 +50,48 @@
                 <el-table-column
                     prop="sender"
                     label="发送者"
-                />
+                >
+                    <template slot-scope="scope">
+                        <el-tooltip :content="scope.row.sender">
+                            <div>{{ scope.row.sender | filterAdressName }}</div>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
                 <el-table-column
                     prop="recipient"
                     label="接收者"
-                />
+                >
+                    <template slot-scope="scope">
+                        <el-tooltip :content="scope.row.recipient">
+                            <div>{{ scope.row.recipient | filterAdressName }}</div>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
                 <el-table-column
-                    v-if="activeTabName!='fixedFlowrate'"
+                    v-if="activeTab!='fixedFlowrate'"
                     prop="deposit"
                     label="流金额"
-                    :formatter="formatMoney"
+                    :formatter="formatMoneyWithUnit"
                 />
                 <el-table-column
-                    prop="tokenAddress"
-                    label="币种"
-                />
-                <el-table-column
-                    v-if="activeTabName=='fixedFlowrate'"
+                    v-if="activeTab=='fixedFlowrate'"
                     prop="maxAmount"
                     label="最大金额"
-                    :formatter="formatMoney"
+                    :formatter="formatMoneyWithUnit"
                 />
                 <el-table-column
-                    v-if="activeTabName=='fixedFlowrate'"
+                    v-if="activeTab=='fixedFlowrate'"
                     prop="ratePerSecond"
                     label="流动率"
                     :formatter="formatMoney"
                 />
                 <el-table-column
-                    v-if="activeTabName=='installment'||activeTabName=='installmentWithDP'"
+                    v-if="activeTab=='installment'||activeTab=='installmentWithDP'"
                     prop="numberOfInstallments"
                     label="分期数"
                 />
                 <el-table-column
-                    v-if="activeTabName=='installment'||activeTabName=='installmentWithDP'"
-                    prop="feesOfRecipientPer"
-                    label="手续费"
-                    :formatter="formatMoney"
-                />
-                <el-table-column
-                    v-if="activeTabName=='installmentWithDP'"
+                    v-if="activeTab=='installmentWithDP'"
                     prop="downPaymentRatio"
                     label="首付比例"
                 >
@@ -103,9 +105,15 @@
                     :formatter="formatDate"
                 />
                 <el-table-column
-                    v-if="activeTabName!='fixedFlowrate'"
+                    v-if="activeTab!='fixedFlowrate'"
                     prop="stopTime"
                     label="结束时间"
+                    :formatter="formatDate"
+                />
+                <el-table-column
+                    v-if="activeTab=='fixedFlowrate'"
+                    prop="maxStopTime"
+                    label="预计结束时间"
                     :formatter="formatDate"
                 />
                 <el-table-column
@@ -116,23 +124,33 @@
                         <router-link
                             v-if="!scope.row.isCancelStstus"
                             :to="{path: '/streamInfo',
-                                  query: {streamId:scope.row.streamId, activeTabName:activeTabName}}"
+                                  query: {streamId:scope.row.streamId, activeTabName:activeTab}}"
                         >
                             <el-button
                                 title="查看流"
                                 type="primary"
+                                size="medium"
                                 round
                                 plain
                             >
-                                查看<i class="el-icon-right" />
+                                查看流<i class="el-icon-right" />
                             </el-button>
                         </router-link>
-                        <div
-                            class="c-9"
+                        <router-link
                             v-else
+                            :to="{path: '/cancelInfo',
+                                  query: {streamId:scope.row.streamId, activeTabName:activeTab}}"
                         >
-                            已取消
-                        </div>
+                            <el-button
+                                title="已结束"
+                                type="danger"
+                                size="medium"
+                                round
+                                plain
+                            >
+                                已结束<i class="el-icon-right" />
+                            </el-button>
+                        </router-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -144,34 +162,34 @@
 import _ from 'lodash'
 import moment from 'moment'
 import {mapState} from 'vuex'
-import {getMoney} from '@/utils/utils.js'
-// import sablierInstance from '../utils/sablierInstance'
-// import fixedFlowrateInstance from '../utils/fixedFlowrateInstance'
-// import installmentInstance from '../utils/installmentInstance'
-// import installmentWithDPInstance from '../utils/installmentWithDPInstance'
+import {getMoney, filterAdressName, getMoneyWithUnit} from '@/utils/utils.js'
 import {getInstance} from '../utils/connectContract'
 import CreatStream from '@/components/qualification/CreatStream.vue'
 
 export default {
-    name: 'ErpReport',
+    name: 'Dashboard',
     components: {
         CreatStream,
+    },
+    filters: {
+        filterAdressName,
     },
     data() {
         return {
             data: [],
             showModal: false,
             cancelStreamArr: [],
-            activeTab: '',
+            activeTab: 'sablier',
             allInstance: {}//获取的所有合约接口
         }
     },
     async created(){
         this.allInstance = await getInstance()
+        this.activeTab = this.activeTabName
         this.ajaxQuery()
     },
     computed: {
-        ...mapState(['sender', 'recipient', 'activeTabName']),
+        ...mapState(['user', 'recipient', 'activeTabName']),
     },
     methods: {
         formatDate(row, column, val) {
@@ -179,6 +197,9 @@ export default {
         },
         formatMoney(row, column, val) {
             return getMoney(val)
+        },
+        formatMoneyWithUnit(row, column, val) {
+            return getMoneyWithUnit(val, row.tokenAddress)
         },
         creat() {
             this.showModal = true
@@ -192,60 +213,33 @@ export default {
             this.ajaxQuery()
         },
         async ajaxQuery(){//post请求列表数据
-            this.activeTab = this.activeTabName
-            if (this.activeTabName == 'sablier') {
-                this.allInstance.sablierInstance.getPastEvents('CancelStream', {fromBlock: 0}, async (error, events) => {
-                    this.cancelStreamArr = _.map(events, (o)=>{
-                        return o.returnValues.streamId
-                    })
-                })
-                this.allInstance.sablierInstance.getPastEvents('CreateStream', {fromBlock: 0}, async (error, events) => {
-                    this.data = _.map(events, (o)=>{
-                        o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
-                        return o.returnValues
-                    })
-                })
-            } else if (this.activeTabName == 'fixedFlowrate'){
-                this.allInstance.fixedFlowrateInstance.getPastEvents('CancelFixedFlowrateStream', {fromBlock: 0}, async (error, events) => {
-                    this.cancelStreamArr = _.map(events, (o)=>{
-                        return o.returnValues.streamId
-                    })
-                })
-                this.allInstance.fixedFlowrateInstance.getPastEvents('CreateFixedFlowrateStream',
-                    {fromBlock: 0}, async (error, events) => {
-                        this.data = _.map(events, (o)=>{
-                            o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
-                            return o.returnValues
-                        })
-                    // console.log(events)
-                    })
-            } else if (this.activeTabName == 'installment'){
-                this.allInstance.installmentInstance.getPastEvents('CancelInstallmentStream', {fromBlock: 0}, async (error, events) => {
-                    this.cancelStreamArr = _.map(events, (o)=>{
-                        return o.returnValues.streamId
-                    })
-                })
-                this.allInstance.installmentInstance.getPastEvents('CreateInstallmentStream', {fromBlock: 0}, async (error, events) => {
-                    this.data = _.map(events, (o)=>{
-                        o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
-                        return o.returnValues
-                    })
-                })
-            } else if (this.activeTabName == 'installmentWithDP'){
-                this.allInstance.installmentWithDPInstance.getPastEvents('CancelInstallmentWithDPStream', {fromBlock: 0}, async (error, events) => {
-                    this.cancelStreamArr = _.map(events, (o)=>{
-                        return o.returnValues.streamId
-                    })
-                })
-                this.allInstance.installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream',
-                    {fromBlock: 0}, async (error, events) => {
-                        this.data = _.map(events, (o)=>{
-                            o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
-                            return o.returnValues
-                        })
-                    })
+            this.data = []//每次清空数据
+            let cancelRes = []//被取消的流
+            let dataOfSender = []//返回当前用户作为发送者列表
+            let dataOfRecipient = []//返回当前用户作为接收者列表
+            if (this.activeTab == 'sablier') {
+                cancelRes = await this.allInstance.sablierInstance.getPastEvents('CancelStream', {fromBlock: 0})
+                dataOfSender = await this.allInstance.sablierInstance.getPastEvents('CreateStream', {filter: {sender: this.user}, fromBlock: 0})
+                dataOfRecipient = await this.allInstance.sablierInstance.getPastEvents('CreateStream', {filter: {recipient: this.user}, fromBlock: 0})
+            } else if (this.activeTab == 'fixedFlowrate'){
+                cancelRes = await this.allInstance.fixedFlowrateInstance.getPastEvents('CancelFixedFlowrateStream', {fromBlock: 0})
+                dataOfSender = await this.allInstance.fixedFlowrateInstance.getPastEvents('CreateFixedFlowrateStream', {filter: {sender: this.user}, fromBlock: 0})
+                dataOfRecipient = await this.allInstance.fixedFlowrateInstance.getPastEvents('CreateFixedFlowrateStream', {filter: {recipient: this.user}, fromBlock: 0})
+            } else if (this.activeTab == 'installment'){
+                cancelRes = await this.allInstance.installmentInstance.getPastEvents('CancelInstallmentStream', {fromBlock: 0})
+                dataOfSender = await this.allInstance.installmentInstance.getPastEvents('CreateInstallmentStream', {filter: {sender: this.user}, fromBlock: 0})
+                dataOfRecipient = await this.allInstance.installmentInstance.getPastEvents('CreateInstallmentStream', {filter: {recipient: this.user}, fromBlock: 0})
+            } else if (this.activeTab == 'installmentWithDP'){
+                cancelRes = await this.allInstance.installmentWithDPInstance.getPastEvents('CancelInstallmentWithDPStream', {fromBlock: 0})
+                dataOfSender = await this.allInstance.installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream', {filter: {sender: this.user}, fromBlock: 0})
+                dataOfRecipient = await this.allInstance.installmentWithDPInstance.getPastEvents('CreateInstallmentWithDPStream', {filter: {recipient: this.user}, fromBlock: 0})
             }
-
+            let dataAll = _.concat(dataOfSender, dataOfRecipient)//连接后的数据
+            this.cancelStreamArr = _.map(cancelRes, (o)=>{return o.returnValues.streamId})
+            this.data = _.map(dataAll, (o)=>{
+                o.returnValues.isCancelStstus = this.cancelStreamArr.includes(o.returnValues.streamId)
+                return o.returnValues
+            })
         },
     },
 }
