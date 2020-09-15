@@ -23,7 +23,7 @@ const installmentWithDP_address_all = {
 }
 const testNet_address_all = {
     1: '',
-    3: '0x62E9019a47Ea604c58139EF3D21852D6b18D469B',
+    3: '0x26Ec63a4672AdD5509C8cbC1f1c88d5958D22408',
     1337: '0xAa89BDF2cBdFF7A6c33d6404f0611167fae19F81'
 }
 /* eslint-disable */

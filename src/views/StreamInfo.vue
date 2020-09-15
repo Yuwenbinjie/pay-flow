@@ -534,7 +534,7 @@ export default {
                 }
                 if (res) {
                     clearInterval(timer)
-                    this.$alert('取消成功!', '操作提示', {type: 'success'}).then(()=>{
+                    this.$alert('取消成功!', '操作提示', {type: 'success', showClose: false}).then(()=>{
                         this.$router.push({path: '/cancelInfo', query: {streamId: this.streamId, activeTabName: this.activeTabName}})
                     })
                 } else {
