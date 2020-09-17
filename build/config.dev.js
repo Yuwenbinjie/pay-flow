@@ -8,23 +8,10 @@ module.exports = {
         open: true,
         //openPage: '',
         overlay: true,
-        host: 'localhost.jd.com',
+        host: 'localhost',
         proxy: {
-            '/brand/admin': {
-                // target: 'http://admin.jzt-api.jd.com',
-                target: 'http://pts-api.jd.com/mock/5cad5fa09814c918a15133c3',
-                secure: false,
-                changeOrigin: true,
-            },
-            '/material': {
-                // target: 'http://pts-api.jd.com/mock/5ea1397f6823840101d39a57',
-                target: 'http://admin.deal-api.jd.com',
-                secure: false,
-                changeOrigin: true,
-            },
             '/qualification': {
-                // target: 'http://pts-api.jd.com/mock/5ea1397f6823840101d39a57',
-                target: 'http://admin.deal-api.jd.com',
+                target: 'http://admin.deal-api.com',
                 secure: false,
                 changeOrigin: true,
             },

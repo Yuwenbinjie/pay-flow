@@ -7,15 +7,15 @@ module.exports = {
     title: 'payFlow-ui',
     //不同环境下配置
     development: {//本地开发环境
-        erpLoginUrl: '//test.ssa.jd.com',
+        erpLoginUrl: '',
         apiUrl: ''
     },
     test: {//测试环境
-        erpLoginUrl: '//test.ssa.jd.com',
-        apiUrl: '//admin.deal-api.jd.com'
+        erpLoginUrl: '',
+        apiUrl: ''
     },
     production: {//预发和线上环境
-        erpLoginUrl: '//ssa.jd.com',
-        apiUrl: '//admin.deal-api.jd.com'
+        erpLoginUrl: '',
+        apiUrl: ''
     }
 }
