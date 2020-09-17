@@ -29,25 +29,26 @@
                         class="c-blue2"
                         to="/dashboard"
                     >
-                        仪表盘
+                        DashBoard
                     </router-link>
                 </el-button>
                 <el-button
                     class="w140"
                     icon="el-icon-notebook-2"
                 >
-                    <router-link
+                    <a
+                        href="https://cndocs.streampay.finance"
+                        target="_blank"
                         class="c-blue2"
-                        to="/home"
                     >
-                        介绍文档
-                    </router-link>
+                        Docs
+                    </a>
                 </el-button>
                 <el-button
                     round
                     icon="el-icon-s-custom"
                 >
-                    {{ name | filterName }}
+                    {{ name | filterAdressName }}
                 </el-button>
             </el-button-group>
         </div>
@@ -56,6 +57,7 @@
 
 <script>
 import Web3 from 'web3'
+import {filterAdressName} from '@/utils/utils.js'
 export default {
     name: 'Header',
     data() {
@@ -70,13 +72,7 @@ export default {
         }, 2000)
     },
     filters: {
-        filterName(val) {
-            if (val.length > 10) {
-                return val.substr(0, 4) + '...' + val.substr(val.length - 4, 4)
-            } else {
-                return val
-            }
-        }
+        filterAdressName,
     },
     methods: {
         getUser() {
@@ -86,7 +82,7 @@ export default {
             this.web3.eth.getAccounts().then((val)=>{
                 // console.log(val)
                 this.name = val[0]
-                this.$store.commit('updateData', {key: 'sender', value: val[0]})
+                this.$store.commit('updateData', {key: 'user', value: val[0]})
                 this.$store.commit('updateData', {key: 'recipient', value: val[1]})
             })
         },
@@ -94,7 +90,7 @@ export default {
             //监听账号的变化。
             window.ethereum.on('accountsChanged', (accounts) => {
                 this.name = accounts[0];
-                this.$store.commit('updateData', {key: 'sender', value: accounts[0]})
+                this.$store.commit('updateData', {key: 'user', value: accounts[0]})
                 location.reload()
             });
             //监听网络

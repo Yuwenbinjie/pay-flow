@@ -75,9 +75,11 @@ rules:
     - 4
   max-statements:
     - 2
-    - 50
+    - 80
   max-statements-per-line:
     - 2
+    -
+      max: 2
   max-len:
     - 2
     - 180

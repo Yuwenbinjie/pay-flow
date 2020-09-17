@@ -36,7 +36,7 @@
                     <el-input v-model="params.recipient" />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName!='fixedFlowrate'"
+                    v-if="activeTab!='fixedFlowrate'"
                     label="流金额"
                 >
                     <el-input
@@ -45,7 +45,7 @@
                     />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName=='fixedFlowrate'"
+                    v-if="activeTab=='fixedFlowrate'"
                     label="可承受最大金额转账"
                 >
                     <el-input
@@ -54,7 +54,7 @@
                     />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName=='fixedFlowrate'"
+                    v-if="activeTab=='fixedFlowrate'"
                     label="流动率（每秒流动金额）"
                 >
                     <el-input
@@ -63,10 +63,22 @@
                     />
                 </el-form-item>
                 <el-form-item label="币种">
-                    <el-input v-model="params.tokenAddress" />
+                    <!-- <el-autocomplete style="width:100%" valueKey="label" :fetch-suggestions="querySearch" v-model="params.tokenAddress" /> -->
+                    <el-select
+                        style="width:100%"
+                        v-model="params.tokenAddress"
+                        placeholder="请选择币种"
+                    >
+                        <el-option
+                            v-for="item in tokenAddressOpt"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </el-select>
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName!='fixedFlowrate'"
+                    v-if="activeTab!='fixedFlowrate'"
                     label="起止时间"
                 >
                     <el-date-picker
@@ -81,7 +93,7 @@
                     />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName=='fixedFlowrate'"
+                    v-if="activeTab=='fixedFlowrate'"
                     label="开始时间"
                 >
                     <el-date-picker
@@ -94,7 +106,7 @@
                     />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName=='installment'||activeTabName=='installmentWithDP'"
+                    v-if="activeTab=='installment'||activeTab=='installmentWithDP'"
                     label="分期数"
                 >
                     <el-input
@@ -103,8 +115,8 @@
                     />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName=='installment'||activeTabName=='installmentWithDP'"
-                    label="接收者收取的手续费"
+                    v-if="activeTab=='installment'||activeTab=='installmentWithDP'"
+                    label="接收者收取的手续费（每期每秒每ETH收取的手续费，单位为1/10**18）"
                 >
                     <el-input
                         type="number"
@@ -112,7 +124,7 @@
                     />
                 </el-form-item>
                 <el-form-item
-                    v-if="activeTabName=='installmentWithDP'"
+                    v-if="activeTab=='installmentWithDP'"
                     label="首付比例"
                 >
                     <el-input
@@ -130,9 +142,10 @@
                         class="mt36 py16"
                         style="width:100%"
                         type="primary"
+                        :disabled="isOnlyClick"
                         @click="save"
                     >
-                        创建流<i class="el-icon-right el-icon--right" />
+                        {{ isOnlyClick?'创建中...':'创建流' }}<i class="el-icon-right el-icon--right" />
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -143,8 +156,10 @@
 <script>
 import {mapState} from 'vuex'
 import moment from 'moment'
-import {setMoney} from '@/utils/utils.js'
+import {tokenAddressOpt} from '@/components/constant/tokenAddress'
+import {setMoneyWeb3} from '@/utils/utils.js'
 import {getInstance} from '@/utils/connectContract'
+import bignumber from 'bignumber.js'
 export default {
     name: 'CreatStream',
     props: {
@@ -157,6 +172,7 @@ export default {
     },
     data() {
         return {
+            tokenAddressOpt,
             options: [{
                 value: 'sablier',
                 label: '固定金额流'
@@ -178,11 +194,13 @@ export default {
                     return moment(time) <= moment().subtract(1, 'days');
                 },
             },
+            isOnlyClick: false, //创建流只可点击一次
             activeTab: '',
+            approveAmount: 0,
         }
     },
     computed: {
-        ...mapState(['sender', 'recipient', 'activeTabName']),
+        ...mapState(['user', 'recipient', 'activeTabName']),
     },
     async created(){
         this.allInstance = await getInstance()
@@ -190,8 +208,7 @@ export default {
     watch: {
         showModal(val){
             if (val) {
-                // console.log(this.activeTabName)
-                // console.log(this.sender, this.recipient)
+                this.isOnlyClick = false
                 this.activeTab = this.activeTabName
                 this.initParam()
             }
@@ -215,95 +232,92 @@ export default {
             }
             this.dateTime = [moment().add(5, 'minutes'), moment().add(1, 'days')]
             this.params.recipient = this.recipient
-            this.params.tokenAddress = this.allInstance.testnetInstance.options.address
+            this.approveAmount = 0
+            // this.params.tokenAddress = this.allInstance.testnetInstance.options.address
         },
         async save() {
-            // console.log(this.dateTime)
             let isOk = await this.validate(this.params)
             if (!isOk) return
-            this.$store.commit('updateData', {key: 'activeTabName', value: this.activeTab})
+            this.isOnlyClick = true
+            let res
             //批准、铸币
-            if (this.activeTabName == 'sablier') {
-                await this.allInstance.testnetInstance.methods.approve(this.allInstance.sablierInstance.options.address, setMoney(this.params.deposit)).send({
-                    gas: 3000000,
-                    from: this.sender
+            if (this.activeTab == 'sablier') {
+                await this.allInstance.testnetInstance.methods.approve(this.allInstance.sablierInstance.options.address, setMoneyWeb3(this.params.deposit)).send({
+                    gas: 500000,
+                    from: this.user
                 });
-                await this.allInstance.testnetInstance.methods.mint(this.sender, setMoney(this.params.deposit)).send({
-                    gas: 3000000,
-                    from: this.sender
-                });
-                let res = await this.allInstance.sablierInstance.methods
-                    .createStream(this.params.recipient, setMoney(this.params.deposit),
+                // await this.allInstance.testnetInstance.methods.mint(this.user, setMoneyWeb3(this.params.deposit)).send({
+                //     gas: 500000,
+                //     from: this.user
+                // });
+                res = await this.allInstance.sablierInstance.methods
+                    .createStream(this.params.recipient, setMoneyWeb3(this.params.deposit),
                         this.params.tokenAddress, moment(this.dateTime[0]).unix(), moment(this.dateTime[1]).unix())
                     .send({
-                        gas: 3000000,
-                        from: this.sender
+                        gas: 500000,
+                        from: this.user
                     })
-                if (res) {
-                    this.closeModal()
-                }
-            } else if (this.activeTabName == 'fixedFlowrate'){
+            } else if (this.activeTab == 'fixedFlowrate'){
                 await this.allInstance.testnetInstance.methods.approve(this.allInstance.fixedFlowrateInstance.options.address,
-                    setMoney(this.params.maxAmount)).send({
-                    gas: 3000000,
-                    from: this.sender
+                    setMoneyWeb3(this.params.maxAmount)).send({
+                    gas: 500000,
+                    from: this.user
                 });
-                await this.allInstance.testnetInstance.methods.mint(this.sender, setMoney(this.params.maxAmount)).send({
-                    gas: 3000000,
-                    from: this.sender
-                });
-                let res = await this.allInstance.fixedFlowrateInstance.methods
-                    .createFixedFlowrateStream(this.params.recipient, setMoney(this.params.maxAmount),
-                        this.params.tokenAddress, setMoney(this.params.ratePerSecond), moment(this.params.startTime).unix())
+                res = await this.allInstance.fixedFlowrateInstance.methods
+                    .createFixedFlowrateStream(this.params.recipient, setMoneyWeb3(this.params.maxAmount),
+                        this.params.tokenAddress, setMoneyWeb3(this.params.ratePerSecond), moment(this.params.startTime).unix())
                     .send({
-                        gas: 3000000,
-                        from: this.sender
+                        gas: 500000,
+                        from: this.user
                     })
-                if (res) {
-                    this.closeModal()
+            } else if (this.activeTab == 'installment') {
+                if (this.params.feesOfRecipientPer != 0){
+                    this.approveAmount = this.params.deposit * this.params.numberOfInstallments * (moment(this.dateTime[1]).unix() - moment(this.dateTime[0]).unix())
+                    this.approveAmount = new bignumber(this.params.feesOfRecipientPer).multipliedBy(this.approveAmount)
+                    this.approveAmount = new bignumber(this.approveAmount).plus(this.params.deposit).toString()
+                } else {
+                    this.approveAmount = this.params.deposit
                 }
-            } else if (this.activeTabName == 'installment') {
-                await this.allInstance.testnetInstance.methods.approve(this.allInstance.installmentInstance.options.address, setMoney(this.params.deposit)).send({
+                await this.allInstance.testnetInstance.methods.approve(this.allInstance.installmentInstance.options.address, setMoneyWeb3(this.approveAmount)).send({
                     gas: 3000000,
-                    from: this.sender
-                });
-                await this.allInstance.testnetInstance.methods.mint(this.sender, setMoney(this.params.deposit)).send({
-                    gas: 3000000,
-                    from: this.sender
-                });
-                let res = await this.allInstance.installmentInstance.methods
-                    .createInstallmentStream(this.params.recipient, setMoney(this.params.deposit),
+                    from: this.user
+                })
+                res = await this.allInstance.installmentInstance.methods
+                    .createInstallmentStream(this.params.recipient, setMoneyWeb3(this.params.deposit),
                         this.params.tokenAddress, moment(this.dateTime[0]).unix(), moment(this.dateTime[1]).unix(),
-                        this.params.numberOfInstallments, setMoney(this.params.feesOfRecipientPer))
+                        this.params.numberOfInstallments, setMoneyWeb3(this.params.feesOfRecipientPer))
                     .send({
-                        gas: 3000000,
-                        from: this.sender
+                        gas: 500000,
+                        from: this.user
                     })
-                if (res) {
-                    this.closeModal()
+            } else if (this.activeTab == 'installmentWithDP') {
+                if (this.params.feesOfRecipientPer != 0){
+                    this.approveAmount = this.params.deposit * ((100 - this.params.downPaymentRatio) / 100) * this.params.numberOfInstallments
+                        * (moment(this.dateTime[1]).unix() - moment(this.dateTime[0]).unix())
+                    this.approveAmount = new bignumber(this.params.feesOfRecipientPer).multipliedBy(this.approveAmount)
+                    this.approveAmount = new bignumber(this.approveAmount).plus(this.params.deposit).toString()
+                } else {
+                    this.approveAmount = this.params.deposit
                 }
-            } else if (this.activeTabName == 'installmentWithDP') {
-                await this.allInstance.testnetInstance.methods.approve(this.allInstance.installmentWithDPInstance.options.address,
-                    setMoney(this.params.deposit)).send({
+                await this.allInstance.testnetInstance.methods.approve(this.allInstance.installmentWithDPInstance.options.address, setMoneyWeb3(this.approveAmount)).send({
                     gas: 3000000,
-                    from: this.sender
-                });
-                await this.allInstance.testnetInstance.methods.mint(this.sender, setMoney(this.params.deposit)).send({
-                    gas: 3000000,
-                    from: this.sender
-                });
-                let res = await this.allInstance.installmentWithDPInstance.methods
-                    .createInstallmentWithDPStream(this.params.recipient, setMoney(this.params.deposit),
+                    from: this.user
+                })
+                res = await this.allInstance.installmentWithDPInstance.methods
+                    .createInstallmentWithDPStream(this.params.recipient, setMoneyWeb3(this.params.deposit),
                         this.params.tokenAddress, moment(this.dateTime[0]).unix(), moment(this.dateTime[1]).unix(),
                         this.params.numberOfInstallments, this.params.downPaymentRatio,
-                        setMoney(this.params.feesOfRecipientPer),)
+                        setMoneyWeb3(this.params.feesOfRecipientPer),)
                     .send({
-                        gas: 3000000,
-                        from: this.sender
+                        gas: 500000,
+                        from: this.user
                     })
-                if (res) {
-                    this.closeModal()
-                }
+            }
+            if (res) {
+                this.isOnlyClick = false
+                this.$store.commit('updateData', {key: 'activeTabName', value: this.activeTab})
+                this.$alert('创建成功!', '操作提示', {type: 'success'})
+                this.closeModal()
             }
 
         },
@@ -311,22 +325,22 @@ export default {
             try {
                 if (!params.recipient) throw new Error('收件人为必填项！')
                 if (!params.tokenAddress) throw new Error('币种为必填项！')
-                if (this.activeTabName == 'fixedFlowrate'){
-                    if (!params.maxAmount || params.maxAmount < 0) throw new Error('最大金额为必填项，且需大于0！')
-                    if (!params.ratePerSecond || params.ratePerSecond < 0) throw new Error('流动率为必填项，且需大于0！')
+                if (this.activeTab == 'fixedFlowrate'){
+                    if (!params.maxAmount || params.maxAmount <= 0) throw new Error('最大金额为必填项，且需大于0！')
+                    if (!params.ratePerSecond || params.ratePerSecond <= 0) throw new Error('流动率为必填项，且需大于0！')
                     if (!params.startTime || params.startTime <= moment()) throw new Error('开始时间为必填项，且需大于当前时间！')
                 } else {
-                    if (!params.deposit || params.deposit < 0) throw new Error('流金额为必填项，且需大于0！')
+                    if (!params.deposit || params.deposit <= 0) throw new Error('流金额为必填项，且需大于0！')
                     if (!this.dateTime || this.dateTime[0] <= moment()) throw new Error('起止时间为必填项，且开始时间需大于当前时间！')
                 }
-                if (this.activeTabName == 'installmentWithDP' || this.activeTabName == 'installment'){
+                if (this.activeTab == 'installmentWithDP' || this.activeTab == 'installment'){
                     if (!params.numberOfInstallments || params.numberOfInstallments < 0) throw new Error('分期数为必填项，且需大于0！')
                     if (!params.feesOfRecipientPer || params.feesOfRecipientPer < 0) throw new Error('手续费为必填项，最小为0！')
                     if ((moment(this.dateTime[1]).unix() - moment(this.dateTime[0]).unix()) % params.numberOfInstallments != 0){
-                        throw new Error('起止时间除以分期数不得有余数！')
+                        throw new Error('持续时间除分期数不得有余数！')
                     }
                 }
-                if (this.activeTabName == 'installmentWithDP'){
+                if (this.activeTab == 'installmentWithDP'){
                     if (!params.downPaymentRatio || params.downPaymentRatio < 0 || params.downPaymentRatio > 100) throw new Error('首付比例为必填项，且范围在0～100之间！')
                 }
             }
