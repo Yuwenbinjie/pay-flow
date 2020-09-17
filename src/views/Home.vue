@@ -3,11 +3,11 @@
         <div class="pay-home1">
             <div style="padding-top:200px;">
                 <div class="fs50 bold">
-                    连续的价值转移使支付成为实时行为
+                    连续的价值转移以实现实时支付
                 </div>
-                <!-- <div class="fs20 mt40">
-                    我们的开发套件提供对以太坊和 IPFS 网络的即时、可扩展的 API 访问。
-                </div> -->
+                <div class="fs20 mt40">
+                    通过对货币的编程，我们建立了实时支付的智能合约并将其部署在以太坊上
+                </div>
                 <el-button
                     class="mt64"
                     round

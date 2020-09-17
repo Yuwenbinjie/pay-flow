@@ -36,12 +36,13 @@
                     class="w140"
                     icon="el-icon-notebook-2"
                 >
-                    <router-link
+                    <a
+                        href="https://cndocs.streampay.finance"
+                        target="_blank"
                         class="c-blue2"
-                        to="/home"
                     >
-                        介绍文档
-                    </router-link>
+                        Docs
+                    </a>
                 </el-button>
                 <el-button
                     round
