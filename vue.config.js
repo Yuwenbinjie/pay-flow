@@ -3,7 +3,7 @@ const conf = require('./build/config')
 const configConst = require('./build/const')
 
 module.exports = {
-    publicPath: `/${configConst.base}`,
+    publicPath: `./`,
     outputDir: path.join('dist', configConst.base),
     assetsDir: 'assets',
     pages: {

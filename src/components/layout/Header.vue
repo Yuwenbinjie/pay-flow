@@ -4,7 +4,7 @@
             <div class="inline-block bold">
                 <!-- <i class="icon-statistics vm fs32" /> -->
                 <img
-                    src="../../assets/imgs/logo.png"
+                    src="https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0.0/assets/imgs/logo.png"
                     class="logo_pic"
                 >
                 <span class="vt ml8 fs24">流付</span>

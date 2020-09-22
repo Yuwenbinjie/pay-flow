@@ -28,7 +28,7 @@ if(process.argv.indexOf('--dll') != -1){
                         // dll文件位置
                         filepath: path.resolve(__dirname,'../dist',configConst.base,'dll',file),
                         // dll 引用路径
-                        publicPath: path.join('../', configConst.base, 'dll'),
+                        publicPath: path.join('./', 'dll'),
                         // dll最终输出的目录
                         outputPath: path.join('../', configConst.base, 'dll'),
                     }) 

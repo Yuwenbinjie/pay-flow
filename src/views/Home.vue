@@ -91,7 +91,7 @@
                 </el-col>
                 <el-col :span="12">
                     <img
-                        src="../assets/imgs/wx1.jpeg"
+                        src="https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0/assets/imgs/wx1.jpeg"
                         class="wx_pic"
                     >
                     <p class="mt8">
@@ -111,7 +111,7 @@ export default {
 
 <style scoped>
 .pay-home1{
-    background: url(../assets/imgs/bg_p1.jpg) 0 -70px;
+    background: url(https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0.0/assets/imgs/bg_p1.jpg) 0 -70px no-repeat;
     background-size: cover;
     padding: 0px 15vw;
     height: 100%;
@@ -123,7 +123,7 @@ export default {
 }
 .bg_home2{
     height: 350px;
-    background: url(../assets/imgs/bg_p3.png) no-repeat;
+    background: url(https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0.0/assets/imgs/bg_p3.png) no-repeat;
     background-size: 100% 100%;
 }
 .pay-home3{
