@@ -16,7 +16,8 @@ if (window.ethereum) {
     web3 = new Web3(web3.currentProvider);
 } else {
     // Non-dapp browsers...
-    web3 = new Web3('HTTP://127.0.0.1:8545');
+    // web3 = new Web3('HTTP://127.0.0.1:8545');
+    alert('检测到未安装metamask插件');
     // console.log('Non-Ethereum browser detected. You should consider trying MetaMask!')
 }
 // let web3 = new Web3('HTTP://127.0.0.1:8545');
