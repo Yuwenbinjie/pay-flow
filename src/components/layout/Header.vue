@@ -1,21 +1,40 @@
 <template>
-    <div id="pay-header">
-        <div class="pull-left pt8">
-            <div class="inline-block bold">
+    <div
+        id="pay-header"
+        class="clearfix"
+    >
+        <div class="pull-left pt8 clearfix l34">
+            <div class="pull-left bold">
                 <!-- <i class="icon-statistics vm fs32" /> -->
                 <img
-                    src="https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0.0/assets/imgs/logo.png"
+                    src="../../assets/imgs/logo.png"
                     class="logo_pic"
                 >
                 <span class="vt ml8 fs24">流付</span>
             </div>
-            <div class="inline-block ml64 bold vb">
+            <div class="pull-left ml64 bold ">
                 <router-link
                     to="/home"
                     class="l32"
                 >
                     <span class="c-white"><i class="el-icon-s-home" /> 主页</span>
                 </router-link>
+            </div>
+            <div class="pull-left vt ml32">
+                <el-select
+                    size="mini"
+                    class="w90"
+                    v-model="currentLang"
+                    @change="changeLang"
+                    placeholder="语言切换"
+                >
+                    <el-option
+                        v-for="item in languageOpt"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    />
+                </el-select>
             </div>
         </div>
         <div class="pull-right">
@@ -62,7 +81,18 @@ export default {
     name: 'Header',
     data() {
         return {
-            name: ''
+            name: '',
+            currentLang: this.$currentLang,
+            languageOpt: [
+                {
+                    value: 'zh',
+                    label: '中文'
+                },
+                {
+                    value: 'en',
+                    label: 'English'
+                },
+            ]
         }
     },
     created() {
@@ -75,6 +105,15 @@ export default {
         filterAdressName,
     },
     methods: {
+        changeLang(lang){
+            if (lang == 'zh'){
+                localStorage.setItem('streampayLang', 'zh')
+                this.$i18n.locale = localStorage.getItem('streampayLang')
+            } else if (lang == 'en') {
+                localStorage.setItem('streampayLang', 'en')
+                this.$i18n.locale = localStorage.getItem('streampayLang')
+            }
+        },
         getUser() {
             // this.web3.eth.getCoinbase((err, coinbase) => {
             //     this.name = coinbase
