@@ -3,10 +3,10 @@
         <div class="pay-home1">
             <div style="padding-top:200px;">
                 <div class="fs50 bold">
-                    连续的价值转移以实现实时支付
+                    {{ $t('home.h1') }}
                 </div>
                 <div class="fs20 mt40">
-                    通过对货币的编程，我们建立了实时支付的智能合约并将其部署在以太坊上
+                    {{ $t('home.h2') }}
                 </div>
                 <el-button
                     class="mt64"
@@ -14,48 +14,48 @@
                     plain
                 >
                     <router-link to="/dashboard">
-                        <span class="c-blue2">开始使用</span>
+                        <span class="c-blue2">{{ $t('home.startBtn') }}</span>
                     </router-link>
                 </el-button>
             </div>
         </div>
         <div class="pay-home2">
             <div class="bold fs24 py40">
-                合约介绍
+                {{ $t('home.introduce.title') }}
             </div>
             <div class="bg_home2" />
             <div>
                 <el-row :gutter="30">
                     <el-col :span="6">
                         <div class="bold fs18 mb16">
-                            固定金额流支付
+                            {{ $t('home.introduce.sablierTitle') }}
                         </div>
                         <div class="t-l">
-                            在开始时间至结束时间内，流会以流动率每秒流向接收者。
+                            {{ $t('home.introduce.sablierVal') }}
                         </div>
                     </el-col>
                     <el-col :span="6">
                         <div class="bold fs18 mb16">
-                            固定流率流支付
+                            {{ $t('home.introduce.fixedTitle') }}
                         </div>
                         <div class="t-l">
-                            流在开始时间后每秒以特定的速率流向接收者，直到等于最大支付金额。无需设定结束时间，可增加最大支付金额，延长流的持续时间。
+                            {{ $t('home.introduce.fixedVal') }}
                         </div>
                     </el-col>
                     <el-col :span="6">
                         <div class="bold fs18 mb16">
-                            分期流支付
+                            {{ $t('home.introduce.installmentTitle') }}
                         </div>
                         <div class="t-l">
-                            尝试使用分期流支付，随意设置分期期数，不再占用现金流。
+                            {{ $t('home.introduce.installmentVal') }}
                         </div>
                     </el-col>
                     <el-col :span="6">
                         <div class="bold fs18 mb16">
-                            首付分期流支付
+                            {{ $t('home.introduce.installmentDPTitle') }}
                         </div>
                         <div class="t-l">
-                            为你的分期流支付添加首付比例，满足更多场景需求。
+                            {{ $t('home.introduce.installmentDPVal') }}
                         </div>
                     </el-col>
                 </el-row>
@@ -68,34 +68,34 @@
             >
                 <el-col :span="12">
                     <div class="bold fs18 mb16">
-                        联系我们
+                        {{ $t('home.footer.contactTitle') }}
                     </div>
                     <div class="t-l">
-                        <p>邮箱：lichenguang62@gmail.com</p>
+                        <p>Email：lichenguang62@gmail.com</p>
                         <a
                             href="https://github.com/Machael-lcg/streamPay"
                             target="_blank"
-                            class="c-white"
+                            class="c-white block"
                         >
                             Github：https://github.com/Machael-lcg/streamPay
                         </a>
                         <a
                             href="https://discord.gg/9sQCNK4"
                             target="_blank"
-                            class="c-white"
+                            class="c-white block"
                         >
                             Discord：https://discord.gg/9sQCNK4
                         </a>
-                        <p>微信：streampay</p>
+                        <p>Wechat：streampay</p>
                     </div>
                 </el-col>
                 <el-col :span="12">
                     <img
-                        src="https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0/assets/imgs/wx1.jpeg"
+                        src="../assets/imgs/wx1.jpeg"
                         class="wx_pic"
                     >
                     <p class="mt8">
-                        扫一扫关注我们
+                        {{ $t('home.footer.focusText') }}
                     </p>
                 </el-col>
             </el-row>
@@ -111,7 +111,7 @@ export default {
 
 <style scoped>
 .pay-home1{
-    background: url(https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0.0/assets/imgs/bg_p1.jpg) 0 -70px no-repeat;
+    background: url(../assets/imgs/bg_p1.jpg) 0 -70px no-repeat;
     background-size: cover;
     padding: 0px 15vw;
     height: 100%;
@@ -123,7 +123,7 @@ export default {
 }
 .bg_home2{
     height: 350px;
-    background: url(https://cdn.jsdelivr.net/gh/Machael-lcg/CDN@1.0.0/assets/imgs/bg_p3.png) no-repeat;
+    background: url(../assets/imgs/bg_p3.png) no-repeat;
     background-size: 100% 100%;
 }
 .pay-home3{
