@@ -1,7 +1,7 @@
 <template>
     <div class="pay-dashboard">
         <p class="title-lv1">
-            流信息
+            {{ $t('cancelStream.streaminfo') }}
             <router-link to="/dashboard">
                 <el-button
                     size="samll"
@@ -30,7 +30,7 @@
                             slot="header"
                             class="clearfix"
                         >
-                            <span class="l40 bold fs18">流已结束</span>
+                            <span class="l40 bold fs18">{{ $t('cancelStream.details.info') }}</span>
                         </div>
                         <div>
                             <el-row class="t-c mb16">
@@ -45,7 +45,7 @@
                                             @click="copyText('senderText')"
                                             plain
                                         >
-                                            发送：{{ info.sender | filterAdressName }}
+                                            {{ $t('cancelStream.info.sender') }}：{{ info.sender | filterAdressName }}
                                         </el-button>
                                     </el-tooltip>
                                 </el-col>
@@ -63,14 +63,14 @@
                                             @click="copyText('recipientText')"
                                             plain
                                         >
-                                            接收：{{ info.recipient | filterAdressName }}
+                                            {{ $t('cancelStream.info.recipient') }}：{{ info.recipient | filterAdressName }}
                                         </el-button>
                                     </el-tooltip>
                                 </el-col>
                             </el-row>
-                            <p class="bold fs18 mb12">
-                                基本信息
-                            </p>
+<!--                            <p class="bold fs18 mb12">-->
+<!--                                基本信息-->
+<!--                            </p>-->
                             <el-row
                                 class="mb16"
                             >
@@ -78,61 +78,61 @@
                                     <el-card shadow="never">
                                         <div v-if="activeTabName=='fixedFlowrate'">
                                             <p class="bold fs16">
-                                                最大金额转账：<span class="normal break">{{ getMoney(addAmount) }}</span> {{ unit }}
+                                                {{ $t('cancelStream.info.maxAmount') }}：<span class="normal break">{{ getMoney(addAmount) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                流动率：<span class="normal break">{{ getMoney(info.ratePerSecond) }}</span> {{ unit }}
+                                                {{ $t('cancelStream.info.ratepersecond') }}：<span class="normal break">{{ getMoney(info.ratePerSecond) }}</span> {{ unit }}
                                             </p>
                                         </div>
                                         <div v-else-if="activeTabName=='installmentWithDP'||activeTabName=='installment'">
                                             <p class="bold fs16">
-                                                流金额：<span class="normal break">{{ getMoney(info.deposit) }}</span> {{ unit }}
+                                                {{ $t('cancelStream.info.deposit') }}：<span class="normal break">{{ getMoney(info.deposit) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                已支付流金额：<span class="normal break">{{ getMoney(this.total) }}</span> {{ unit }}
+                                                {{ $t('cancelStream.info.haveBeenPaidAmount') }}：<span class="normal break">{{ getMoney(this.total) }}</span> {{ unit }}
                                             </p>
                                         </div>
                                         <div v-else>
                                             <p class="bold fs16">
-                                                流金额：<span class="normal break">{{ getMoney(info.deposit) }}</span> {{ unit }}
+                                                {{ $t('cancelStream.info.deposit') }}：<span class="normal break">{{ getMoney(info.deposit) }}</span> {{ unit }}
                                             </p>
                                         </div>
                                         <p class="bold fs16 mt8">
-                                            结束前发送者余额：<span class="normal break">{{ getMoney(senderBalance) }}</span> {{ unit }}
+                                            {{ $t('cancelStream.info.endOfsenderBalance') }}：<span class="normal break">{{ getMoney(senderBalance) }}</span> {{ unit }}
                                         </p>
                                         <p class="bold fs16 mt8">
-                                            结束前接收者余额：<span class="normal break">{{ getMoney(recipientBalance) }}</span> {{ unit }}
+                                            {{ $t('cancelStream.info.endOfrecipientBalance') }}：<span class="normal break">{{ getMoney(recipientBalance) }}</span> {{ unit }}
                                         </p>
                                         <p
                                             v-if="activeTabName=='installmentWithDP'"
                                             class="bold fs16 mt8"
                                         >
-                                            首付金额：<span class="normal break">{{ getMoney(this.downPaymentAmount) }}</span> {{ unit }}
+                                            {{ $t('cancelStream.info.downpayment') }}：<span class="normal break">{{ getMoney(this.downPaymentAmount) }}</span> {{ unit }}
                                         </p>
                                         <div v-if="activeTabName=='installmentWithDP'||activeTabName=='installment'">
                                             <p class="bold fs16 mt8">
-                                                手续费：<span class="normal break">{{ getMoney(this.fees) }}</span> {{ unit }}
+                                                {{ $t('cancelStream.info.fees') }}：<span class="normal break">{{ getMoney(this.fees) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                分期数：<span class="normal break">{{ info.numberOfInstallments }}</span>
+                                                {{ $t('cancelStream.info.numbeOfInstallments') }}：<span class="normal break">{{ info.numberOfInstallments }}</span>
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                已支付分期数：<span class="normal break">{{ this.haveBeenNumberOfInstallment }}</span>
+                                                {{ $t('cancelStream.info.haveBeenNumberOfInstallment') }}：<span class="normal break">{{ this.haveBeenNumberOfInstallment }}</span>
                                             </p>
                                         </div>
                                         <p class="bold fs16 mt8">
-                                            实际结束时间：<span class="normal break">{{ timestamp|filterDate }}</span>
+                                            {{ $t('cancelStream.info.actualStopTime') }}：<span class="normal break">{{ timestamp|filterDate }}</span>
                                         </p>
                                     </el-card>
                                 </el-col>
                             </el-row>
                             <p class="bold fs18 mb12">
-                                持续时间
+                                {{ $t('cancelStream.info.duration') }}
                             </p>
                             <el-card shadow="never">
                                 <div>
                                     <p class="bold">
-                                        开始时间
+                                        {{ $t('cancelStream.info.startTime') }}
                                     </p>
                                     <p class="bold fs18 my12">
                                         <i class="el-icon-watch" />
@@ -141,7 +141,7 @@
                                 </div>
                                 <div>
                                     <p class="bold mt20">
-                                        结束时间
+                                        {{ $t('cancelStream.info.stopTime') }}
                                     </p>
                                     <p class="bold fs18 my12">
                                         <i class="el-icon-watch" />
@@ -222,14 +222,14 @@ export default {
             clipboard.on('success', function () {
                 that.$message({
                     type: 'success',
-                    message: '成功复制到剪切板!'
+                    message: 'Copy Success!'
                 })
                 clipboard.destroy()
             });
             clipboard.on('error', function () {
                 that.$message({
                     type: 'error',
-                    message: '复制失败!'
+                    message: 'Copy Failure!'
                 })
                 clipboard.destroy()
             });
@@ -263,14 +263,14 @@ export default {
 
             let option = {
                 title: {
-                    text: '停止流动',
+                    text: this.$t('cancelStream.info.endedStreamed'),
                     // subtext: '',
                 },
                 series: [{
                     type: 'liquidFill',
                     data: [flowedPer, flowedPer],
                     radius: '90%',
-                    name: '停止流动'
+                    name: this.$t('cancelStream.info.endedStreamed'),
                 }],
                 tooltip: {
                     show: true,

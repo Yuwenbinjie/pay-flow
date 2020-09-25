@@ -1,26 +1,26 @@
 <template>
     <div class="pay-dashboard">
         <p class="title-lv1">
-            仪表盘
+            {{ $t('dashboard.dash') }}
         </p>
         <el-tabs
             v-model="activeTab"
             @tab-click="changeTab"
         >
             <el-tab-pane
-                label="固定金额流"
+                :label="$t('dashboard.stream.fixedDeposit')"
                 name="sablier"
             />
             <el-tab-pane
-                label="固定流率流"
+                :label="$t('dashboard.stream.fixedFlowrate')"
                 name="fixedFlowrate"
             />
             <el-tab-pane
-                label="分期流"
+                :label="$t('dashboard.stream.installment')"
                 name="installment"
             />
             <el-tab-pane
-                label="首付分期流"
+                :label="$t('dashboard.stream.installementWithDP')"
                 name="installmentWithDP"
             />
         </el-tabs>
@@ -32,7 +32,7 @@
                     icon="el-icon-s-promotion"
                     @click="creat"
                 >
-                    创建流
+                    {{ $t('dashboard.create') }}
                 </el-button>
                 <creat-stream
                     :show-modal="showModal"
@@ -45,11 +45,11 @@
             >
                 <el-table-column
                     prop="streamId"
-                    label="流ID"
+                    :label="$t('dashboard.info.id')"
                 />
                 <el-table-column
                     prop="sender"
-                    label="发送者"
+                    :label="$t('dashboard.info.sender')"
                 >
                     <template slot-scope="scope">
                         <el-tooltip :content="scope.row.sender">
@@ -59,7 +59,7 @@
                 </el-table-column>
                 <el-table-column
                     prop="recipient"
-                    label="接收者"
+                    :label="$t('dashboard.info.recipient')"
                 >
                     <template slot-scope="scope">
                         <el-tooltip :content="scope.row.recipient">
@@ -70,30 +70,30 @@
                 <el-table-column
                     v-if="activeTab!='fixedFlowrate'"
                     prop="deposit"
-                    label="流金额"
+                    :label="$t('dashboard.info.deposit')"
                     :formatter="formatMoneyWithUnit"
                 />
                 <el-table-column
                     v-if="activeTab=='fixedFlowrate'"
                     prop="maxAmount"
-                    label="最大金额"
+                    :label="$t('dashboard.info.maxAmount')"
                     :formatter="formatMoneyWithUnit"
                 />
                 <el-table-column
                     v-if="activeTab=='fixedFlowrate'"
                     prop="ratePerSecond"
-                    label="流动率"
+                    :label="$t('dashboard.info.ratepersecond')"
                     :formatter="formatMoney"
                 />
                 <el-table-column
                     v-if="activeTab=='installment'||activeTab=='installmentWithDP'"
                     prop="numberOfInstallments"
-                    label="分期数"
+                    :label="$t('dashboard.info.numbeOfInstallments')"
                 />
                 <el-table-column
                     v-if="activeTab=='installmentWithDP'"
                     prop="downPaymentRatio"
-                    label="首付比例"
+                    :label="$t('dashboard.info.downpaymentRatio')"
                 >
                     <template slot-scope="scope">
                         <div>{{ scope.row.downPaymentRatio }} %</div>
@@ -101,24 +101,24 @@
                 </el-table-column>
                 <el-table-column
                     prop="startTime"
-                    label="开始时间"
+                    :label="$t('dashboard.info.startTime')"
                     :formatter="formatDate"
                 />
                 <el-table-column
                     v-if="activeTab!='fixedFlowrate'"
                     prop="stopTime"
-                    label="结束时间"
+                    :label="$t('dashboard.info.stopTime')"
                     :formatter="formatDate"
                 />
                 <el-table-column
                     v-if="activeTab=='fixedFlowrate'"
                     prop="maxStopTime"
-                    label="预计结束时间"
+                    :label="$t('dashboard.info.maxStopTime')"
                     :formatter="formatDate"
                 />
                 <el-table-column
                     width="120"
-                    label="操作"
+                    :label="$t('dashboard.info.operation')"
                 >
                     <template slot-scope="scope">
                         <router-link
@@ -127,13 +127,13 @@
                                   query: {streamId:scope.row.streamId, activeTabName:activeTab}}"
                         >
                             <el-button
-                                title="查看流"
+                                :title="$t('dashboard.info.checkStream')"
                                 type="primary"
                                 size="medium"
                                 round
                                 plain
                             >
-                                查看流<i class="el-icon-right" />
+                                {{ $t('dashboard.info.checkStream') }}<i class="el-icon-right" />
                             </el-button>
                         </router-link>
                         <router-link
@@ -142,13 +142,13 @@
                                   query: {streamId:scope.row.streamId, activeTabName:activeTab}}"
                         >
                             <el-button
-                                title="已结束"
+                                :title="$t('dashboard.info.cancel')"
                                 type="danger"
                                 size="medium"
                                 round
                                 plain
                             >
-                                已结束<i class="el-icon-right" />
+                                {{ $t('dashboard.info.cancel') }}<i class="el-icon-right" />
                             </el-button>
                         </router-link>
                     </template>

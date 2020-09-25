@@ -1,7 +1,7 @@
 <template>
     <div class="pay-dashboard">
         <p class="title-lv1">
-            流信息
+            {{ $t('streamInfo.streaminfo') }}
             <router-link to="/dashboard">
                 <el-button
                     size="samll"
@@ -30,7 +30,7 @@
                             slot="header"
                             class="clearfix"
                         >
-                            <span class="l40 bold fs18">流信息详情</span>
+                            <span class="l40 bold fs18">{{ $t('streamInfo.details.info') }}</span>
                             <div class="pull-right">
                                 <el-button
                                     icon="el-icon-money"
@@ -39,7 +39,7 @@
                                     size="medium"
                                     @click="withdraw"
                                 >
-                                    提取
+                                    {{ $t('streamInfo.details.withdrawl') }}
                                 </el-button>
                                 <el-button
                                     v-if="activeTabName=='fixedFlowrate'&&info.sender==user"
@@ -49,7 +49,7 @@
                                     size="medium"
                                     @click="addAmount"
                                 >
-                                    加额
+                                    {{ $t('streamInfo.details.addAmount') }}
                                 </el-button>
                                 <el-button
                                     v-if="(activeTabName=='installmentWithDP'||activeTabName=='installment')&&info.sender==user"
@@ -59,7 +59,7 @@
                                     size="medium"
                                     @click="installment"
                                 >
-                                    分期
+                                    {{ $t('streamInfo.details.installment') }}
                                 </el-button>
                                 <el-button
                                     icon="el-icon-switch-button"
@@ -68,14 +68,14 @@
                                     size="medium"
                                     @click="cancel"
                                 >
-                                    取消
+                                    {{ $t('streamInfo.details.cancel') }}
                                 </el-button>
                             </div>
                         </div>
                         <div>
                             <el-row class="t-c mb16">
                                 <el-col :span="10">
-                                    <el-tooltip :content="`点击复制：${info.sender}`">
+                                    <el-tooltip :content="$t('streamInfo.info.copy',{who:info.sender})">
                                         <el-button
                                             size="small"
                                             style="width:100%;"
@@ -85,7 +85,7 @@
                                             @click="copyText('senderText')"
                                             plain
                                         >
-                                            发送：{{ info.sender | filterAdressName }}
+                                            {{ $t('streamInfo.info.sender') }}：{{ info.sender | filterAdressName }}
                                         </el-button>
                                     </el-tooltip>
                                 </el-col>
@@ -93,7 +93,7 @@
                                     <i class="el-icon-d-arrow-right" />
                                 </el-col>
                                 <el-col :span="10">
-                                    <el-tooltip :content="`点击复制：${info.recipient}`">
+                                    <el-tooltip :content="$t('streamInfo.info.copy',{who:info.recipient})">
                                         <el-button
                                             size="small"
                                             style="width:100%;"
@@ -103,14 +103,14 @@
                                             @click="copyText('recipientText')"
                                             plain
                                         >
-                                            接收：{{ info.recipient | filterAdressName }}
+                                            {{ $t('streamInfo.info.recipient') }}：{{ info.recipient | filterAdressName }}
                                         </el-button>
                                     </el-tooltip>
                                 </el-col>
                             </el-row>
-                            <p class="bold fs18 mb12">
-                                基本信息
-                            </p>
+<!--                            <p class="bold fs18 mb12">-->
+<!--                                {{ $t('streamInfo.details.basicInfo') }}-->
+<!--                            </p>-->
                             <el-row
                                 class="mb16"
                             >
@@ -118,62 +118,62 @@
                                     <el-card shadow="never">
                                         <div v-if="activeTabName=='fixedFlowrate'">
                                             <p class="bold fs16">
-                                                最大金额转账：<span class="normal break">{{ getMoney(info.maxAmount) }}</span> {{ unit }}
+                                                {{ $t('streamInfo.info.maxAmount') }}：<span class="normal break">{{ getMoney(info.maxAmount) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                已流动：<span class="normal break">{{ getMoney(info.maxAmount - senderBalance) }}</span> {{ unit }}
+                                                {{ $t('streamInfo.info.havebeenStreamed') }}：<span class="normal break">{{ getMoney(info.maxAmount - senderBalance) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                流动率：<span class="normal break">{{ getMoney(info.ratePerSecond) }}</span> {{ unit }}
+                                                {{ $t('streamInfo.info.ratepersecond') }}：<span class="normal break">{{ getMoney(info.ratePerSecond) }}</span> {{ unit }}
                                             </p>
                                         </div>
                                         <div v-else>
                                             <p class="bold fs16">
-                                                流金额：<span class="normal break">{{ getMoney(info.deposit) }}</span> {{ unit }}
+                                                {{ $t('streamInfo.info.deposit') }}：<span class="normal break">{{ getMoney(info.deposit) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                已流动：
+                                                {{ $t('streamInfo.info.havebeenStreamed') }}：
                                                 <span class="normal break">
                                                     {{ activeTabName=='sablier'?getMoney(info.deposit - senderBalance):getMoney(info.haveBeenPaidAmount - senderBalance) }}
                                                 </span> {{ unit }}
                                             </p>
                                         </div>
                                         <p class="bold fs16 mt8">
-                                            发送者余额：<span class="normal break">{{ getMoney(senderBalance) }}</span> {{ unit }}
+                                            {{ $t('streamInfo.info.senderBalance') }}：<span class="normal break">{{ getMoney(senderBalance) }}</span> {{ unit }}
                                         </p>
                                         <p class="bold fs16 mt8">
-                                            接收者余额：<span class="normal break">{{ getMoney(recipientBalance) }}</span> {{ unit }}
+                                            {{ $t('streamInfo.info.recipientBalance') }}：<span class="normal break">{{ getMoney(recipientBalance) }}</span> {{ unit }}
                                         </p>
                                         <p
                                             v-if="activeTabName=='installmentWithDP'"
                                             class="bold fs16 mt8"
                                         >
-                                            首付金额：<span class="normal break">{{ getMoney(info.downPaymentAmount) }}</span> {{ unit }}
+                                            {{ $t('streamInfo.info.downpayment') }}：<span class="normal break">{{ getMoney(info.downPaymentAmount) }}</span> {{ unit }}
                                         </p>
                                         <div v-if="activeTabName=='installmentWithDP'||activeTabName=='installment'">
                                             <p class="bold fs16 mt8">
-                                                手续费：<span class="normal break">{{ getMoney(fees) }}</span> {{ unit }}
+                                                {{ $t('streamInfo.info.fees') }}：<span class="normal break">{{ getMoney(fees) }}</span> {{ unit }}
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                分期数：<span class="normal break">{{ info.numberOfInstallments }}</span>
+                                                {{ $t('streamInfo.info.numbeOfInstallments') }}：<span class="normal break">{{ info.numberOfInstallments }}</span>
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                已支付分期数：<span class="normal break">{{ info.haveBeenNumberOfInstallment }}</span>
+                                                {{ $t('streamInfo.info.haveBeenNumberOfInstallment') }}：<span class="normal break">{{ info.haveBeenNumberOfInstallment }}</span>
                                             </p>
                                             <p class="bold fs16 mt8">
-                                                下期支付截止时间：<span class="normal break">{{ nextOfInstallmentTime|filterDate }}</span>
+                                                {{ $t('streamInfo.info.nextOfInstallmentTime') }}：<span class="normal break">{{ nextOfInstallmentTime|filterDate }}</span>
                                             </p>
                                         </div>
                                     </el-card>
                                 </el-col>
                             </el-row>
                             <p class="bold fs18 mb12">
-                                持续时间
+                                {{ $t('streamInfo.info.duration') }}
                             </p>
                             <el-card shadow="never">
                                 <div>
                                     <p class="bold">
-                                        开始时间
+                                        {{ $t('streamInfo.info.startTime') }}
                                     </p>
                                     <p class="bold fs18 my12">
                                         <i class="el-icon-watch" />
@@ -182,7 +182,7 @@
                                 </div>
                                 <div>
                                     <p class="bold mt20">
-                                        结束时间
+                                        {{ $t('streamInfo.info.stopTime') }}
                                     </p>
                                     <p class="bold fs18 my12">
                                         <i class="el-icon-watch" />
@@ -262,14 +262,14 @@ export default {
             clipboard.on('success', function () {
                 that.$message({
                     type: 'success',
-                    message: '成功复制到剪切板!'
+                    message: 'Copy Success!'
                 })
                 clipboard.destroy()
             });
             clipboard.on('error', function () {
                 that.$message({
                     type: 'error',
-                    message: '复制失败!'
+                    message: 'Copy Failure!'
                 })
                 clipboard.destroy()
             });
@@ -286,14 +286,14 @@ export default {
             let flowedPer = (getMoney(total) - getMoney(this.senderBalance)) / getMoney(total)
             let option = {
                 title: {
-                    text: '已流动金额',
+                    text: this.$t('streamInfo.info.havebeenStreamed'),
                     // subtext: '',
                 },
                 series: [{
                     type: 'liquidFill',
                     data: [flowedPer, flowedPer],
                     radius: '90%',
-                    name: '已流动'
+                    name: this.$t('streamInfo.info.havebeenStreamed')
                 }],
                 tooltip: {
                     show: true,
@@ -431,11 +431,11 @@ export default {
             this.recipientBalance = recipientBalance
         },
         withdraw() {//提取金额
-            this.$prompt('请输入提取的金额', '操作', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$prompt(this.$t('streamInfo.function.withdraw'), this.$t('streamInfo.function.operation'), {
+                confirmButtonText: this.$t('streamInfo.function.confirm'),
+                cancelButtonText: this.$t('streamInfo.function.cancel'),
                 inputPattern: /^([0-9]*|[0-9]*.[0-9]+)$/,
-                inputErrorMessage: '金额输入格式不正确'
+                inputErrorMessage: this.$t('streamInfo.function.format'),
             }).then(async ({value}) => {
                 let res
                 if (this.activeTabName == 'sablier'){
@@ -452,17 +452,17 @@ export default {
                         .send({gas: 500000, from: this.user})
                 }
                 if (res) {
-                    this.$alert('提取金额成功!', '操作提示', {type: 'success'})
+                    this.$alert(this.$t('streamInfo.function.withdrawlSuccess'), this.$t('streamInfo.function.operationHint'), {type: 'success'})
                     await this.getInfo()//重新获取流信息
                 } else {
-                    this.$alert('提取金额失败!', '操作提示', {type: 'error'})
+                    this.$alert(this.$t('streamInfo.function.withdrawlFailure'), this.$t('streamInfo.function.operationHint'), {type: 'error'})
                 }
             })
         },
         async installment() {//分期付款
             const now = Date.parse(new Date()) / 1000;
             if (now > this.nextOfInstallmentTime){
-                alert('已超过下期支付截止时间')
+                alert(this.$t('streamInfo.function.nextOfInstallmentTime'))
             } else {
                 if (this.info.haveBeenNumberOfInstallment < this.info.numberOfInstallments - 1){
                     this.nextOfInstallmentAmount = await Math.floor(new bignumber(this.infoCal.installmentAmountWithFees).dividedToIntegerBy(this.info.numberOfInstallments))
@@ -471,9 +471,9 @@ export default {
                     this.nextOfInstallmentAmount = await new bignumber(this.infoCal.installmentAmountWithFees).dividedToIntegerBy(this.info.numberOfInstallments)
                     this.nextOfInstallmentAmount = await new bignumber(this.nextOfInstallmentAmount).plus(remainder)
                 }
-                this.$confirm('本期需支付金额：' + getMoney(this.nextOfInstallmentAmount), '操作', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
+                this.$confirm(this.$t('streamInfo.function.pay') + getMoney(this.nextOfInstallmentAmount), this.$t('streamInfo.function.operation'), {
+                    confirmButtonText: this.$t('streamInfo.function.confirm'),
+                    cancelButtonText: this.$t('streamInfo.function.cancel'),
                 }).then(async () => {
                     let res
                     if (this.activeTabName == 'installment') {
@@ -484,20 +484,20 @@ export default {
                             .send({gas: 500000, from: this.user})
                     }
                     if (res) {
-                        this.$alert('分期支付成功!', '操作提示', {type: 'success'})
+                        this.$alert(this.$t('streamInfo.function.paySuccess'), this.$t('streamInfo.function.operationHint'), {type: 'success'})
                         await this.getInfo()//重新获取流信息
                     } else {
-                        this.$alert('分期支付失败!', '操作提示', {type: 'error'})
+                        this.$alert(this.$t('streamInfo.function.payFailure'), this.$t('streamInfo.function.operationHint'), {type: 'error'})
                     }
                 })
             }
         },
         addAmount() {//增加最大金额
-            this.$prompt('请输入增加的金额', '操作', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$prompt(this.$t('streamInfo.function.addInput'), this.$t('streamInfo.function.operation'), {
+                confirmButtonText: this.$t('streamInfo.function.confirm'),
+                cancelButtonText: this.$t('streamInfo.function.cancel'),
                 inputPattern: /^([0-9]*|[0-9]*.[0-9]+)$/,
-                inputErrorMessage: '金额输入格式不正确'
+                inputErrorMessage: this.$t('streamInfo.function.format'),
             }).then(async ({value}) => {
                 await this.allInstance.testnetInstance.methods.approve(this.allInstance.fixedFlowrateInstance.options.address, setMoneyWeb3(value))
                     .send({gas: 500000, from: this.user})
@@ -506,17 +506,17 @@ export default {
                 let res = await this.allInstance.fixedFlowrateInstance.methods.transferWithFixedFlowrate(this.streamId, setMoneyWeb3(value))
                     .send({gas: 500000, from: this.user})
                 if (res) {
-                    this.$alert('增加金额成功!', '操作提示', {type: 'success'})
+                    this.$alert(this.$t('streamInfo.function.addSuccess'), this.$t('streamInfo.function.operationHint'), {type: 'success'})
                     await this.getInfo()//重新获取流信息
                 } else {
-                    this.$alert('增加金额失败!', '操作提示', {type: 'error'})
+                    this.$alert(this.$t('streamInfo.function.addFailure'), this.$t('streamInfo.function.operationHint'), {type: 'error'})
                 }
             })
         },
         cancel() {//取消流
-            this.$confirm('是否取消流进程?', '操作', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('streamInfo.function.cancelStream'), this.$t('streamInfo.function.operation'), {
+                confirmButtonText: this.$t('streamInfo.function.confirm'),
+                cancelButtonText: this.$t('streamInfo.function.cancel'),
             }).then(async () => {
                 let res
                 if (this.activeTabName == 'sablier'){
@@ -534,11 +534,11 @@ export default {
                 }
                 if (res) {
                     clearInterval(timer)
-                    this.$alert('取消成功!', '操作提示', {type: 'success', showClose: false}).then(()=>{
+                    this.$alert(this.$t('streamInfo.function.cancelSuccess'), this.$t('streamInfo.function.operationHint'), {type: 'success', showClose: false}).then(()=>{
                         this.$router.push({path: '/cancelInfo', query: {streamId: this.streamId, activeTabName: this.activeTabName}})
                     })
                 } else {
-                    this.$alert('取消失败!', '操作提示', {type: 'error'})
+                    this.$alert(this.$t('streamInfo.function.cancelFailure'), this.$t('streamInfo.function.operationHint'), {type: 'error'})
                 }
             })
         },

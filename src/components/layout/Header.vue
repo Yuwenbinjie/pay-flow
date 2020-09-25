@@ -10,14 +10,14 @@
                     src="../../assets/imgs/logo.png"
                     class="logo_pic"
                 >
-                <span class="vt ml8 fs24">流付</span>
+                <span class="vt ml8 fs24">{{ $t('header.streampay') }}</span>
             </div>
             <div class="pull-left ml64 bold ">
                 <router-link
                     to="/home"
                     class="l32"
                 >
-                    <span class="c-white"><i class="el-icon-s-home" /> 主页</span>
+                    <span class="c-white"><i class="el-icon-s-home" /> {{ $t('header.home') }}</span>
                 </router-link>
             </div>
             <div class="pull-left vt ml32">
@@ -48,7 +48,7 @@
                         class="c-blue2"
                         to="/dashboard"
                     >
-                        DashBoard
+                        {{ $t('header.dash') }}
                     </router-link>
                 </el-button>
                 <el-button
@@ -60,7 +60,7 @@
                         target="_blank"
                         class="c-blue2"
                     >
-                        Docs
+                        {{ $t('header.docs') }}
                     </a>
                 </el-button>
                 <el-button
@@ -152,8 +152,7 @@ export default {
                 }
                 // metamask不存在
                 else {
-                    window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-                    alert('检测到未安装metamask插件，此处用本地ganache替代');
+                    alert(this.$t('header.metamask'))
                 }
             });
         }
